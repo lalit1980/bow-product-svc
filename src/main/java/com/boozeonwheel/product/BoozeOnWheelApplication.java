@@ -90,6 +90,15 @@ public class BoozeOnWheelApplication {
 				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Liquor services API")
 						.description("Documentation BoozeOnWheel liquor Services API v1.0").build());
 	}
+	
+	@Bean
+	public Docket swaggerFileUploadApi10() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("FileUpload-Service-API-1.0").select()
+				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.file"))
+				.paths(regex("/api/fileupload/v1.0.*")).build()
+				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel File Upload services API")
+						.description("Documentation BoozeOnWheel File Upload Services API v1.0").build());
+	}
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {

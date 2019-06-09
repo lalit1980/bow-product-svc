@@ -6,3 +6,10 @@ src/main/.DS_Store
 src/main/java/.DS_Store
 src/main/java/com/.DS_Store
 src/main/java/com/boozeonwheel/.DS_Store
+/target/
+.classpath
+.project
+.settings/com.genuitec.eclipse.modernweb.common.core.prefs
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.m2e.core.prefs

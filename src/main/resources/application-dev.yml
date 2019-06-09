@@ -3,7 +3,10 @@ spring:
   profiles: dev
   application:
     name: bow-product-svc
-
+  servlet:
+    multipart:
+      maxRequestSize: 70000000
+      maxFileSize: 70000000
   pid:
     file: build/bow-product-svc.pid
 
@@ -56,7 +59,9 @@ scheduler:
   cron-exp-archiving: "0/30 * * * * ?"
 
 # --------------------------------------------------------------------------------------------------
-
+files:
+  folder: /tmp/filestore
+  max: 10000
 amazonProperties:
   endpointUrl: https://s3.ap-south-1.amazonaws.com
   accessKey: AKIAQ2GFWIPHLQ2CPWI4
