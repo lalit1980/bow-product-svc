@@ -1,0 +1,33 @@
+### This is the main way to configure the application (other than annotations).
+### This file is in Yaml format but you can also configure spring boot using the traditional
+### Java properties file format. 
+
+
+spring:
+  profiles: kubernetes
+      
+barsizesminutes:
+    - 1
+    
+multiplierPeriods:
+    - 3,7
+    
+users:
+    - XS2241,j69qu3zl3k8brb2k,qbkog5dnnl92oq8m7yk1lbbljfr5ris2
+
+server:
+  address: 127.0.0.1
+  port: 9010
+
+report:
+  outputFolder: /Users/apple/data/reports/
+
+historicaldata:
+  day: 10
+  currentMonth: 18DEC
+  nifty: NIFTY18DEC
+  banknifty: BANKNIFTY18DEC
+  
+
+timeSeries:
+  maxtickcount: 1000
