@@ -33,7 +33,7 @@ public class FileService {
     }
 
     
-    public FileMetaData storeData(MultipartFile file, String title, String details, String s3Path) {
+    public FileMetaData storeData(MultipartFile file, String title, String details, String s3Path, long LIQUOR_CODE) {
         String fileName = file.getOriginalFilename();
         List<FileMetaData> metadataFromDb = fileMetaDataRepository.findByFileName(fileName);
         if (metadataFromDb!=null && metadataFromDb.size()>0) {
@@ -46,6 +46,7 @@ public class FileService {
         fileMetaData.setContentType(file.getContentType());
         fileMetaData.setLocation(location);
         fileMetaData.setS3Path(s3Path);
+        fileMetaData.setLIQUOR_CODE(LIQUOR_CODE);
         FileMetaData savedData = fileMetaDataRepository.save(fileMetaData);
         byte[] content = extractContent(file);
         storageProvider.store(file.getOriginalFilename(), content);

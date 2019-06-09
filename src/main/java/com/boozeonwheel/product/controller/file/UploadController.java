@@ -1,5 +1,7 @@
 package com.boozeonwheel.product.controller.file;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -32,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 @Api(value = "Upload", description = "Allows uploading and listing metadata of uploaded files")
 public class UploadController {
-
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final FileService fileService;
     private final AmazonClient amazonService;
 
@@ -55,19 +57,31 @@ public class UploadController {
             @ApiParam(name = "title", value = "Title of the file", required = true)
             @RequestParam("title") String title,
             @ApiParam(name = "details", value = "Details of the file", required = true)
-            @RequestParam("details") String details) {
-
-        Assert.isTrue(!file.isEmpty(), "File cannot be empty");
-
-        UploadResponse response = new UploadResponse();
-        response.setMessage("Successfully uploaded");
-        response.setTitle(title);
-        response.setDetails(details);
-        response.setFileName(file.getOriginalFilename());
+            @RequestParam("details") String details,
+            @ApiParam(name = "liquorCode", value = "Liquor Code", required = true)
+            @RequestParam("LIQUOR_CODE") Long LIQUOR_CODE) {
+    	logger.info("Content Type: "+file.getContentType());
+    	UploadResponse response = new UploadResponse();
+    	if(file.getContentType().equalsIgnoreCase("image/jpeg")) {
+	        Assert.isTrue(!file.isEmpty(), "File cannot be empty");
+	        
+	        response.setMessage("Successfully uploaded");
+	        response.setTitle(title);
+	        response.setDetails(details);
+	        response.setFileName(file.getOriginalFilename());
+	        response.setLIQUOR_CODE(LIQUOR_CODE);
+	       
+	        String S3path=amazonService.uploadFile(file);
+	        response.setS3URL(S3path);
+	        fileService.storeData(file, title,details, S3path, LIQUOR_CODE);
+	       
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+        }else {
+        	response = new UploadResponse();
+            response.setMessage("Error in File uploaded, only image allowed");
+            return new ResponseEntity<>(response, HttpStatus.PRECONDITION_FAILED);
+        }
         
-        String S3path=amazonService.uploadFile(file);
-        fileService.storeData(file, title,details, S3path);
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/fileupload/v1.0/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
