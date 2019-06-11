@@ -1,9 +1,13 @@
 package com.boozeonwheel.product.controller.liquor;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,26 +18,36 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.boozeonwheel.product.api.file.UploadResponse;
+import com.boozeonwheel.product.domain.file.FileMetaData;
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.repository.liquor.LiquorRepository;
+import com.boozeonwheel.product.service.liquor.LiquorService;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api")
 @Api(description = "Set of endpoints for Creating, Retrieving, Updating and Deleting of Liquor.")
 public class LiquorController {
+	
 	@Autowired
 	LiquorRepository liquorRepository;
-
+	
+	@Autowired
+	LiquorService liquorService;
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@GetMapping("/liquor/v1.0/{LIQUOR_CODE}")
@@ -78,12 +92,54 @@ public class LiquorController {
 		return liquorRepository.findByLiquorMeasurement(liquorMeasurement.toUpperCase());
 	}
 
-	@PostMapping({ "/liquor/v1.0" })
-	@ApiOperation("Creates a new liquor.")
-	public M_LIQUOR add(@RequestBody M_LIQUOR liquor) {
-
-		return liquorRepository.save(liquor);
-	}
+	@RequestMapping(value = "/liquor/v1.0", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public M_LIQUOR add(
+    		@RequestParam(value = "liquorCode", required = true) long liquorCode,
+    		@RequestParam(value = "liquorDescription", required = true) String liquorDescription,
+    		@RequestParam(value = "liquorSupplier", required = true) String liquorSupplier,
+    		@RequestParam(value = "liquorType", required = true) String liquorType,
+    		@RequestParam(value = "quantity", required = true) String quantity,
+    		@RequestParam(value = "measurement", required = true) String measurement,
+    		@RequestParam(value = "isActive", required = true) Boolean isActive,
+    		
+    		@RequestParam(value = "file", required = true) MultipartFile file) {
+		
+		List<FileMetaData> fileMetaDataList=new ArrayList<FileMetaData>();
+		M_LIQUOR liquor=new M_LIQUOR();
+		liquor.setLIQUOR_CODE(liquorCode);
+		liquor.setLIQUOR_DESCRIPTION(liquorDescription);
+		liquor.setLIQUOR_SUPPLIER(liquorSupplier);
+		liquor.setLIQUOR_TYPE(liquorType);
+		liquor.setMEASUREMENT(measurement);
+		liquor.setQUANTITY(quantity);
+		liquor.setIS_ACTIVE(isActive);
+		FileMetaData fileMetaData=new FileMetaData();
+		fileMetaData.setLIQUOR_CODE(liquorCode);
+		fileMetaDataList.add(fileMetaData);
+		liquor.setFileMetaData(fileMetaDataList);
+		logger.info("Inside............");
+		try {
+			return liquorService.storeData(file, liquor);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return liquor;
+    }
+	
+	@RequestMapping(value = "/liquor/v1.0", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public HttpStatus uploadFile(
+    		@RequestParam(value = "liquorCode", required = true) long liquorCode,
+    		@RequestParam(value = "file", required = true) MultipartFile file) {
+		logger.info("Inside............");
+		try {
+			liquorService.uploadFile(file, liquorCode);
+			return HttpStatus.OK;
+		} catch (Exception e) {
+			return HttpStatus.NOT_IMPLEMENTED;
+		}
+    }
+	
+	
 
 	@PutMapping("/liquor/v1.0/update/{LIQUOR_CODE}")
 	@ApiOperation("Update a new liquor.")

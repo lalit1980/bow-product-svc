@@ -23,7 +23,7 @@ public class DiskStorageProvider implements StorageProvider {
     private final String rootFolder;
     private final long maxFilesCount;
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    public DiskStorageProvider(@Value("${files.folder}") String rootFolder, @Value("${files.folder.max:10000}") long maxFilesCount) throws IOException {
+    public DiskStorageProvider(@Value("${files.folder}") String rootFolder, @Value("${files.folder.max:100000}") long maxFilesCount) throws IOException {
         this.rootFolder = rootFolder;
         this.maxFilesCount = maxFilesCount;
         Path filesFolder = Paths.get(rootFolder);

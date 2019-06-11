@@ -30,21 +30,9 @@ public class FileMetaData {
 
     private long contentSize;
 
-    private String title;
-
-    private String details;
-
-    private long createdAt;
-
     private String location;
     
-    private String uploadedBy;
-    
     private String s3Path;
-    
-    private long updaedAt;
-    
-    private Boolean isActive;
 
 	public long getFileId() {
 		return fileId;
@@ -86,44 +74,12 @@ public class FileMetaData {
 		this.contentSize = contentSize;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDetails() {
-		return details;
-	}
-
-	public void setDetails(String details) {
-		this.details = details;
-	}
-
-	public long getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(long createdAt) {
-		this.createdAt = createdAt;
-	}
-
 	public String getLocation() {
 		return location;
 	}
 
 	public void setLocation(String location) {
 		this.location = location;
-	}
-
-	public String getUploadedBy() {
-		return uploadedBy;
-	}
-
-	public void setUploadedBy(String uploadedBy) {
-		this.uploadedBy = uploadedBy;
 	}
 
 	public String getS3Path() {
@@ -134,30 +90,12 @@ public class FileMetaData {
 		this.s3Path = s3Path;
 	}
 
-	public long getUpdaedAt() {
-		return updaedAt;
-	}
-
-	public void setUpdaedAt(long updaedAt) {
-		this.updaedAt = updaedAt;
-	}
-
 	@Override
 	public String toString() {
 		return "FileMetaData [fileId=" + fileId + ", LIQUOR_CODE=" + LIQUOR_CODE + ", fileName=" + fileName
-				+ ", contentType=" + contentType + ", contentSize=" + contentSize + ", title=" + title + ", details="
-				+ details + ", createdAt=" + createdAt + ", location=" + location + ", uploadedBy=" + uploadedBy
-				+ ", s3Path=" + s3Path + ", updaedAt=" + updaedAt + ", isActive=" + isActive + "]";
+				+ ", contentType=" + contentType + ", contentSize=" + contentSize + ", location=" + location
+				+ ", s3Path=" + s3Path + "]";
 	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	
-
+    
+    
 }

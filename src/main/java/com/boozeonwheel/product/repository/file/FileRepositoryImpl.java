@@ -89,12 +89,11 @@ public class FileRepositoryImpl implements FileRespositoryCustom {
 		update.set("fileName", fileMetaData.getFileName());
 		update.set("contentType", fileMetaData.getContentType());
 		update.set("contentSize", fileMetaData.getContentSize());
-		update.set("title", fileMetaData.getTitle());
-		update.set("title", fileMetaData.getDetails());
+		
 		update.set("location", fileMetaData.getLocation());
-		update.set("uploadedBy", fileMetaData.getUploadedBy());
+		
 		update.set("uploadedBy", fileMetaData.getS3Path());
-		update.set("isActive", fileMetaData.getIsActive());
+		
 		update.set("updaedAt", new Date().getTime());
 		
 		return mongoTemplate.updateFirst(query, update, FileMetaData.class);

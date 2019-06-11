@@ -1,4 +1,4 @@
-package com.boozeonwheel.product.service.file;
+package com.boozeonwheel.product.service.liquor;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,21 +25,23 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Service
-public class FileService {
+public class LiquorService {
 
-	 	@Autowired
-	    private  StorageProvider storageProvider;
-	 	
-	 	@Autowired
-	 	private  FileRepository fileMetaDataRepository;
-	 	
-	 	@Autowired
-	 	LiquorRepository liquorRepository;
-	    
-	 	@Autowired
-	    AmazonClient amazonService;
+    private final StorageProvider storageProvider;
+    private final FileRepository fileMetaDataRepository;
+    private final LiquorRepository liquorRepository;
+    
+    private final AmazonClient amazonService;
 
-	       
+    @Autowired
+    public LiquorService(FileRepository fileMetaDataRepository, StorageProvider storageProvider,LiquorRepository liquorRepository,AmazonClient amazonService) {
+        this.fileMetaDataRepository = fileMetaDataRepository;
+        this.storageProvider = storageProvider;
+        this.liquorRepository=liquorRepository;
+        this.amazonService=amazonService;
+    }
+
+    
     public M_LIQUOR storeData(MultipartFile file,   M_LIQUOR liquor) {
         String fileName = liquor.getLIQUOR_CODE()+"_"+file.getOriginalFilename();
         List<FileMetaData> metadataFromDb=liquorRepository.findByFileName(fileName);
@@ -67,6 +69,20 @@ public class FileService {
         byte[] content = extractContent(file);
         storageProvider.store(file.getOriginalFilename(), content);
         return liquor;
+    }
+    
+    public void uploadFile(MultipartFile file,   long liquorCode, String fileName) {
+    	List<FileMetaData> fileMetaList=liquorRepository.findByLiquorCodeMeta(liquorCode);
+    	if(fileMetaList!=null && fileMetaList.size()>0) {
+    		for(int i=0;i<fileMetaList.size();i++) {
+    			FileMetaData obj=fileMetaList.get(i);
+    			if(!obj.getFileName().equalsIgnoreCase(fileName)) {
+    		        byte[] content = extractContent(file);
+    		        storageProvider.store(fileName, content);
+    			}
+    		}
+    	}
+        
     }
 
 

@@ -93,7 +93,6 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 	public UpdateResult updateLiquor(M_LIQUOR liquor, long LIQUOR_CODE) {
 		Query query = new Query(Criteria.where("LIQUOR_CODE").is(LIQUOR_CODE));
 		Update update = new Update();
-		update.set("IMAGE_PATH", liquor.getIMAGE_PATH());
 		update.set("IS_ACTIVE", liquor.getIS_ACTIVE());
 		update.set("LIQUOR_CODE", liquor.getLIQUOR_CODE());
 		update.set("LIQUOR_DESCRIPTION", liquor.getLIQUOR_DESCRIPTION());
@@ -102,7 +101,6 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 		update.set("LIQUOR_TYPE", liquor.getLIQUOR_TYPE());
 		update.set("QUANTITY", liquor.getQUANTITY());
 		update.set("MEASUREMENT", liquor.getMEASUREMENT());
-		update.set("UPDATED_BY", liquor.getUPDATED_BY());
 		return mongoTemplate.updateFirst(query, update, M_LIQUOR.class);
 	}
 

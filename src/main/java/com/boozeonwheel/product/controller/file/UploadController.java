@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.boozeonwheel.product.api.file.UploadResponse;
 import com.boozeonwheel.product.client.AmazonClient;
 import com.boozeonwheel.product.domain.file.FileMetaData;
+import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.service.file.FileService;
 
 import io.swagger.annotations.Api;
@@ -34,10 +36,10 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api")
 @Api(value = "Upload", description = "Allows uploading and listing metadata of uploaded files")
 public class UploadController {
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private final FileService fileService;
     private final AmazonClient amazonService;
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public UploadController(FileService fileService,AmazonClient amazonService) {
         this.fileService = fileService;
         this.amazonService=amazonService;
@@ -54,31 +56,26 @@ public class UploadController {
     public ResponseEntity<UploadResponse> uploadFile(
             @ApiParam(name = "file", value = "Select the file to Upload", required = true)
             @RequestParam("file") MultipartFile file,
-            @ApiParam(name = "title", value = "Title of the file", required = true)
-            @RequestParam("title") String title,
-            @ApiParam(name = "details", value = "Details of the file", required = true)
-            @RequestParam("details") String details,
-            @ApiParam(name = "liquorCode", value = "Liquor Code", required = true)
-            @RequestParam("LIQUOR_CODE") Long LIQUOR_CODE) {
-    	logger.info("Content Type: "+file.getContentType());
+            @RequestBody M_LIQUOR liquor) {
+    	logger.info("Inside ......");
     	UploadResponse response = new UploadResponse();
     	if(file.getContentType().equalsIgnoreCase("image/jpeg")) {
-	        Assert.isTrue(!file.isEmpty(), "File cannot be empty");
-	        
-	        response.setMessage("Successfully uploaded");
-	        response.setTitle(title);
-	        response.setDetails(details);
-	        response.setFileName(file.getOriginalFilename());
-	        response.setLIQUOR_CODE(LIQUOR_CODE);
-	       
-	        String S3path=amazonService.uploadFile(file);
-	        response.setS3URL(S3path);
-	        fileService.storeData(file, title,details, S3path, LIQUOR_CODE);
-	       
-	        return new ResponseEntity<>(response, HttpStatus.OK);
+        Assert.isTrue(!file.isEmpty(), "File cannot be empty");
+
+        
+        response.setMessage("Successfully uploaded");
+        
+        response.setFileName(file.getOriginalFilename());
+        response.setLIQUOR_CODE(liquor.getLIQUOR_CODE());
+       
+        String S3path=amazonService.uploadFile(file);
+        response.setS3URL(S3path);
+        fileService.storeData(file, liquor);
+       
+        return new ResponseEntity<>(response, HttpStatus.OK);
         }else {
         	response = new UploadResponse();
-            response.setMessage("Error in File uploaded, only image allowed");
+            response.setMessage("Error in File uploaded, only image");
             return new ResponseEntity<>(response, HttpStatus.PRECONDITION_FAILED);
         }
         
