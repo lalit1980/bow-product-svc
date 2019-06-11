@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.BulkOperations.BulkMode;
@@ -31,6 +32,13 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 
 	@Override
 	public Page<M_LIQUOR> findByLiquorDescription(String liquorDescription, Pageable pageable) {
+		
+		   /*Query query = new Query();
+		   query.skip(pageNumber * pageSize);
+		   query.limit(pageSize);
+		   return mongoTemplate.find(query, M_LIQUOR.class);*/
+		
+		pageable = PageRequest.of(0, 10);
 		Query query = new BasicQuery("{\"LIQUOR_DESCRIPTION\": {$regex : '" + liquorDescription + "'} }").with(pageable);
 		List<M_LIQUOR> list = mongoTemplate.find(query, M_LIQUOR.class);
 		return PageableExecutionUtils.getPage(
