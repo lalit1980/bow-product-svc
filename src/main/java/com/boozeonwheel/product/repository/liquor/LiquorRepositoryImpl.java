@@ -1,9 +1,10 @@
 package com.boozeonwheel.product.repository.liquor;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.BulkOperations.BulkMode;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.repository.support.PageableExecutionUtils;
 
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.mongodb.client.result.DeleteResult;
@@ -28,10 +30,13 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 	}
 
 	@Override
-	public List<M_LIQUOR> findByLiquorDescription(String liquorDescription) {
-		BasicQuery query = new BasicQuery("{\"LIQUOR_DESCRIPTION\": {$regex : '" + liquorDescription + "'} }");
-		query.limit(10);
-		return mongoTemplate.find(query, M_LIQUOR.class);
+	public Page<M_LIQUOR> findByLiquorDescription(String liquorDescription, Pageable pageable) {
+		Query query = new BasicQuery("{\"LIQUOR_DESCRIPTION\": {$regex : '" + liquorDescription + "'} }").with(pageable);
+		List<M_LIQUOR> list = mongoTemplate.find(query, M_LIQUOR.class);
+		return PageableExecutionUtils.getPage(
+		                       list, 
+		                       pageable, 
+		                       () -> mongoTemplate.count(query, M_LIQUOR.class));
 	}
 
 	@Override
@@ -68,7 +73,7 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 	}
 
 	@Override
-	public DeleteResult deleteLiquor(int liquorCode) {
+	public DeleteResult deleteLiquor(long liquorCode) {
 		Query query = new Query(Criteria.where("LIQUOR_CODE").is(liquorCode));
 		return mongoTemplate.remove(query, M_LIQUOR.class);
 	}
@@ -90,8 +95,8 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 	}
 
 	@Override
-	public UpdateResult updateLiquor(M_LIQUOR liquor, long LIQUOR_CODE) {
-		Query query = new Query(Criteria.where("LIQUOR_CODE").is(LIQUOR_CODE));
+	public UpdateResult updateLiquor(M_LIQUOR liquor) {
+		Query query = new Query(Criteria.where("LIQUOR_CODE").is(liquor.getLIQUOR_CODE()));
 		Update update = new Update();
 		update.set("IS_ACTIVE", liquor.getIS_ACTIVE());
 		update.set("LIQUOR_CODE", liquor.getLIQUOR_CODE());
@@ -101,6 +106,7 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 		update.set("LIQUOR_TYPE", liquor.getLIQUOR_TYPE());
 		update.set("QUANTITY", liquor.getQUANTITY());
 		update.set("MEASUREMENT", liquor.getMEASUREMENT());
+		update.set("FileMetaData", liquor.getFileMetaData());
 		return mongoTemplate.updateFirst(query, update, M_LIQUOR.class);
 	}
 

@@ -15,7 +15,7 @@ public class FileMetaData {
 	
 	@Indexed(name = "file_id_index", direction = IndexDirection.DESCENDING)
 	@ApiModelProperty(notes = "Unique identifier of the uploaded file. No two file can have the same id.", example = "1", required = true, position = 0)
-	private long fileId;
+	private String fileId;
 	
 	
 	@Indexed(name = "liquor_code_index", direction = IndexDirection.DESCENDING)
@@ -34,11 +34,11 @@ public class FileMetaData {
     
     private String s3Path;
 
-	public long getFileId() {
+	public String getFileId() {
 		return fileId;
 	}
 
-	public void setFileId(long fileId) {
+	public void setFileId(String fileId) {
 		this.fileId = fileId;
 	}
 

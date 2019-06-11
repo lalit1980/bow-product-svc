@@ -2,15 +2,18 @@ package com.boozeonwheel.product.repository.liquor;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
-public interface LiquorRespositoryCustom {
+public interface LiquorRespositoryCustom{
 
 	public List<M_LIQUOR> findByLiquorCode(long liquorCode);
 
-	public List<M_LIQUOR> findByLiquorDescription(String liquorDescription);
+	public Page<M_LIQUOR> findByLiquorDescription(String liquorDescription,Pageable pageable);
 	public List<M_LIQUOR> findBySupplier(String supplier);
 	public List<M_LIQUOR> findByLiquorType(String liquorType);
 	public List<M_LIQUOR> findByLiquorQuantity(String liquorQuanity);
@@ -18,11 +21,11 @@ public interface LiquorRespositoryCustom {
 
 	public List<M_LIQUOR> findByIsActive(Boolean isActive);
 
-	public DeleteResult deleteLiquor(int liquorCode);
+	public DeleteResult deleteLiquor(long liquorCode);
 
 	public void addAllLiqor(List<M_LIQUOR> liquors);
 	public void deleteAllLiquor();
-	public UpdateResult updateLiquor(M_LIQUOR liquor, long LIQUOR_CODE);
+	public UpdateResult updateLiquor(M_LIQUOR liquor);
 	
 
 	

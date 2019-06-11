@@ -6,24 +6,22 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.boozeonwheel.product.api.file.UploadResponse;
 import com.boozeonwheel.product.domain.file.FileMetaData;
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.repository.liquor.LiquorRepository;
@@ -33,8 +31,6 @@ import com.mongodb.client.result.UpdateResult;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -52,20 +48,16 @@ public class LiquorController {
 
 	@GetMapping("/liquor/v1.0/{LIQUOR_CODE}")
 	@ApiOperation("Returns a specific liquor by their identifier. 404 if does not exist.")
-	public M_LIQUOR get(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE) {
-		List<M_LIQUOR> list=null;
-		M_LIQUOR obj=null;
-		list = liquorRepository.findByLiquorCode(LIQUOR_CODE);
-		if(list!=null && list.size()==1) {
-			obj= list.get(0);
-		}
-		return obj;
+	public List<M_LIQUOR> get(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE,Pageable pageable) {
+		
+		return liquorRepository.findByLiquorCode(LIQUOR_CODE);
+		
 	}
 
 	@GetMapping("/liquor/v1.0/liquorDescription/{liquorDescription}")
 	@ApiOperation("Returns a specific Liquor Description. 404 if does not exist.")
-	public List<M_LIQUOR> getLiquorByLiquorDescription(@PathVariable("liquorDescription") String liquorDescription) {
-		return liquorRepository.findByLiquorDescription(liquorDescription.toUpperCase());
+	public Page<M_LIQUOR> getLiquorByLiquorDescription(@PathVariable("liquorDescription") String liquorDescription,Pageable pageable) {
+		return liquorRepository.findByLiquorDescription(liquorDescription.toUpperCase(),pageable);
 	}
 
 	@GetMapping("/liquor/v1.0/liquorSupplier/{liquorSupplier}")
@@ -92,8 +84,8 @@ public class LiquorController {
 		return liquorRepository.findByLiquorMeasurement(liquorMeasurement.toUpperCase());
 	}
 
-	@RequestMapping(value = "/liquor/v1.0", method = RequestMethod.POST, consumes = {"multipart/form-data"})
-    public M_LIQUOR add(
+	@RequestMapping(value = "/liquor/v1.0/{LIQUOR_CODE}", method = RequestMethod.POST, consumes = {"multipart/form-data"})
+    public void addLiquor(
     		@RequestParam(value = "liquorCode", required = true) long liquorCode,
     		@RequestParam(value = "liquorDescription", required = true) String liquorDescription,
     		@RequestParam(value = "liquorSupplier", required = true) String liquorSupplier,
@@ -117,27 +109,10 @@ public class LiquorController {
 		fileMetaData.setLIQUOR_CODE(liquorCode);
 		fileMetaDataList.add(fileMetaData);
 		liquor.setFileMetaData(fileMetaDataList);
-		logger.info("Inside............");
-		try {
-			return liquorService.storeData(file, liquor);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return liquor;
+		liquorService.storeData(file, liquor);
     }
 	
-	@RequestMapping(value = "/liquor/v1.0", method = RequestMethod.POST, consumes = {"multipart/form-data"})
-    public HttpStatus uploadFile(
-    		@RequestParam(value = "liquorCode", required = true) long liquorCode,
-    		@RequestParam(value = "file", required = true) MultipartFile file) {
-		logger.info("Inside............");
-		try {
-			liquorService.uploadFile(file, liquorCode);
-			return HttpStatus.OK;
-		} catch (Exception e) {
-			return HttpStatus.NOT_IMPLEMENTED;
-		}
-    }
+	
 	
 	
 
@@ -145,19 +120,20 @@ public class LiquorController {
 	@ApiOperation("Update a new liquor.")
 	public UpdateResult update(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE,
 			@RequestBody M_LIQUOR liquor) {
-		return liquorRepository.updateLiquor(liquor,LIQUOR_CODE);
+		return liquorRepository.updateLiquor(liquor);
 	}
 
-	@DeleteMapping({ "/liquor/v1.0/{liquorCode}" })
+	@DeleteMapping({ "/liquor/v1.0/{LIQUOR_CODE}" })
 	@ApiOperation("Deletes a liquor from the system. 404 if the person's identifier is not found.")
-	public DeleteResult delete(@PathVariable("LIQUOR_CODE") int LIQUOR_CODE) {
+	public DeleteResult delete(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE) {
+		logger.info("Liquor Code "+LIQUOR_CODE);
 		return liquorRepository.deleteLiquor(LIQUOR_CODE);
 	}
 
 	@ApiOperation("Returns list of all liquor in the system.")
 	@GetMapping("/liquor/v1.0")
-	public List<M_LIQUOR> findAll() {
-		return liquorRepository.findAll();
+	public Page<M_LIQUOR> findAll(Pageable pageable) {
+		return liquorRepository.findAll(pageable);
 	}
 	
 	@RequestMapping(

@@ -34,6 +34,7 @@ public class DiskStorageProvider implements StorageProvider {
 
     @Override
     public void store(String fileName, byte[] content) {
+    	log.info("File name in DiskStorage: "+ fileName);
         try {
             Path locationPath = Paths.get(getLocation());
             Files.createDirectories(locationPath);
