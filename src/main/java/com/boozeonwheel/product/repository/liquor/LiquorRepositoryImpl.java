@@ -2,6 +2,8 @@ package com.boozeonwheel.product.repository.liquor;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +25,7 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 
 	@Autowired
 	MongoOperations mongoTemplate;
-
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Override
 	public List<M_LIQUOR> findByLiquorCode(long liquorCode) {
 		List<M_LIQUOR> list1= mongoTemplate.find(new Query(Criteria.where("LIQUOR_CODE").is(liquorCode)), M_LIQUOR.class);
@@ -37,10 +39,11 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 		   query.skip(pageNumber * pageSize);
 		   query.limit(pageSize);
 		   return mongoTemplate.find(query, M_LIQUOR.class);*/
-		
-		pageable = PageRequest.of(0, 10);
+		logger.info("Page Number: "+pageable.getPageNumber()+" Page Size: "+ pageable.getPageSize());
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
 		Query query = new BasicQuery("{\"LIQUOR_DESCRIPTION\": {$regex : '" + liquorDescription + "'} }").with(pageable);
 		List<M_LIQUOR> list = mongoTemplate.find(query, M_LIQUOR.class);
+		logger.info("After Page Number: "+pageable.getPageNumber()+" After Page Size: "+ pageable.getPageSize());
 		return PageableExecutionUtils.getPage(
 		                       list, 
 		                       pageable, 

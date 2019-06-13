@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,17 +48,18 @@ public class LiquorController {
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@GetMapping("/liquor/v1.0/{LIQUOR_CODE}")
+	@GetMapping("/liquor/v1.0/{LIQUOR_CODE}/{pageNumber}/{pageSize}")
 	@ApiOperation("Returns a specific liquor by their identifier. 404 if does not exist.")
-	public List<M_LIQUOR> get(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE,Pageable pageable) {
+	public List<M_LIQUOR> get(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE) {
 		
 		return liquorRepository.findByLiquorCode(LIQUOR_CODE);
 		
 	}
 
-	@GetMapping("/liquor/v1.0/liquorDescription/{liquorDescription}")
+	@PostMapping("/liquor/v1.0/liquorDescription/{liquorDescription}/{pageNumber}/{pageSize}")
 	@ApiOperation("Returns a specific Liquor Description. 404 if does not exist.")
-	public Page<M_LIQUOR> getLiquorByLiquorDescription(@PathVariable("liquorDescription") String liquorDescription,Pageable pageable) {
+	public Page<M_LIQUOR> getLiquorByLiquorDescription(@PathVariable("liquorDescription") String liquorDescription,@PathVariable("pageNumber") int pageNumber,@PathVariable("pageSize") int pageSize ) {
+		Pageable pageable = PageRequest.of(pageNumber, pageSize);
 		return liquorRepository.findByLiquorDescription(liquorDescription.toUpperCase(),pageable);
 	}
 
