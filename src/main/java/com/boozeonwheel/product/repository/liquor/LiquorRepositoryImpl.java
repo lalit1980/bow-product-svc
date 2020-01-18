@@ -26,11 +26,6 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 	@Autowired
 	MongoOperations mongoTemplate;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	@Override
-	public List<M_LIQUOR> findByLiquorCode(long liquorCode) {
-		List<M_LIQUOR> list1= mongoTemplate.find(new Query(Criteria.where("LIQUOR_CODE").is(liquorCode)), M_LIQUOR.class);
-		return list1;
-	}
 
 	@Override
 	public Page<M_LIQUOR> findByLiquorDescription(String liquorDescription, Pageable pageable) {
@@ -121,7 +116,8 @@ public class LiquorRepositoryImpl implements LiquorRespositoryCustom {
 		return mongoTemplate.updateFirst(query, update, M_LIQUOR.class);
 	}
 
-	
-
-	
+	@Override
+	public M_LIQUOR findByLiquorCode(long liquorCode) {
+		return mongoTemplate.find(new Query(Criteria.where("LIQUOR_CODE").is(liquorCode)), M_LIQUOR.class).get(0);
+	}
 }

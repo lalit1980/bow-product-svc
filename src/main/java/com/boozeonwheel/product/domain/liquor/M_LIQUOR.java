@@ -41,6 +41,8 @@ public class M_LIQUOR {
 	@ApiModelProperty(notes = "Liquor is Active?", example = "true/false", required = true, position = 0)
 	private Boolean IS_ACTIVE;
 	
+	private int productCategoryId;
+	
 	private List<FileMetaData> fileMetaData;
 
 	public long getLIQUOR_CODE() {
@@ -111,7 +113,16 @@ public class M_LIQUOR {
 	public String toString() {
 		return "M_LIQUOR [LIQUOR_CODE=" + LIQUOR_CODE + ", LIQUOR_DESCRIPTION=" + LIQUOR_DESCRIPTION
 				+ ", LIQUOR_SUPPLIER=" + LIQUOR_SUPPLIER + ", LIQUOR_TYPE=" + LIQUOR_TYPE + ", QUANTITY=" + QUANTITY
-				+ ", MEASUREMENT=" + MEASUREMENT + ", IS_ACTIVE=" + IS_ACTIVE + ", fileMetaData=" + fileMetaData + "]";
+				+ ", MEASUREMENT=" + MEASUREMENT + ", IS_ACTIVE=" + IS_ACTIVE + ", productCategoryId="
+				+ productCategoryId + ", fileMetaData=" + fileMetaData + "]";
+	}
+
+	public int getProductCategoryId() {
+		return productCategoryId;
+	}
+
+	public void setProductCategoryId(int productCategoryId) {
+		this.productCategoryId = productCategoryId;
 	}
 
 

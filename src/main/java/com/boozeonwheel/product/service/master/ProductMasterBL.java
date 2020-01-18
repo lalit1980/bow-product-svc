@@ -1,0 +1,111 @@
+package com.boozeonwheel.product.service.master;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.text.WordUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.boozeonwheel.product.domain.category.ProductCategory;
+import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
+import com.boozeonwheel.product.domain.master.Master;
+import com.boozeonwheel.product.dto.master.MasterDTO;
+import com.boozeonwheel.product.repository.category.ProductCategoryRepository;
+import com.boozeonwheel.product.repository.liquor.LiquorRepository;
+import com.boozeonwheel.product.repository.master.ProductMasterRepository;
+
+@Service
+public class ProductMasterBL {
+
+	@Autowired
+	ProductCategoryRepository productCategoryRepository;
+	
+	@Autowired
+	ProductMasterRepository productMasterRepository;
+	
+	@Autowired
+	LiquorRepository liquorRepository;
+	
+	public void mapLiquorToProduct() {		
+		List<M_LIQUOR> lisquorList=liquorRepository.findAll();
+		if(lisquorList!=null && lisquorList.size()>0) {
+			List<Master> masterList=new ArrayList<Master>();
+			for(int i=0;i<lisquorList.size();i++) {
+				Master master=new Master();
+				master.setId((int)lisquorList.get(i).getLIQUOR_CODE());
+				master.setName(lisquorList.get(i).getLIQUOR_DESCRIPTION());
+				if(lisquorList.get(i).getLIQUOR_TYPE().trim().equalsIgnoreCase("BEER")) {
+					master.setCategoryId(2);
+				}else if(lisquorList.get(i).getLIQUOR_TYPE().trim().equalsIgnoreCase("WINE")) {
+					master.setCategoryId(5);
+				}else if(lisquorList.get(i).getLIQUOR_TYPE().trim().equalsIgnoreCase("LIQUOR")) {
+					master.setCategoryId(3);
+				}else if(lisquorList.get(i).getLIQUOR_TYPE().trim().equalsIgnoreCase("NON-ALCOHOL")) {
+					master.setCategoryId(4);
+				}else if(lisquorList.get(i).getLIQUOR_TYPE().trim().equalsIgnoreCase("STR_SUPPLIES") ||
+						lisquorList.get(i).getLIQUOR_TYPE().trim().equalsIgnoreCase("REF")) {
+					master.setCategoryId(6);
+				}
+				masterList.add(master);
+			}
+			productMasterRepository.addAllProductMasters(masterList);
+			
+		}
+	
+	}
+	public List<MasterDTO> getMasterDataByCategory(int categoryId) {
+		List<Master> masterList=productMasterRepository.findByProductCategoryId(categoryId);
+		List<MasterDTO> dtoList=new ArrayList<MasterDTO>();
+		if((masterList!=null && masterList.size()>0)) {
+			for (Master master : masterList) {
+				MasterDTO dto=new MasterDTO();
+				dto.setCategoryId(master.getCategoryId());
+				dto.setCategoryName(productCategoryRepository.findByCategoryId(categoryId).get(0).getCategoryName());
+				dto.setId(master.getId());
+				dto.setDisplayPrice(master.getDisplayPrice());
+				dto.setName(master.getName());
+				dtoList.add(dto);
+			}
+		}
+		
+		return dtoList;
+	}
+
+	public MasterDTO getMasterDataByProductId(int id) {
+		Master master=productMasterRepository.findByProductMasterId(id);
+		final char[] delimiters = { ' ', '_' };
+		MasterDTO dto=null;
+		if((master!=null)) {
+				dto=new MasterDTO();
+				dto.setCategoryId(master.getCategoryId());
+				ProductCategory category=productCategoryRepository.findByCategoryId(master.getCategoryId()).get(0);
+				dto.setCategoryName(category.getCategoryName());
+				dto.setDepth(master.getDepth());
+				dto.setDescription(master.getDescription());
+				dto.setDisplayPrice(master.getDisplayPrice());
+				dto.setHeight(master.getHeight());
+				dto.setId(master.getId());
+				dto.setImages(master.getImages());
+				dto.setInStock(master.getInStock());
+				dto.setIsBackorderable(master.getIsBackorderable());
+				dto.setIsDestroyed(master.getIsDestroyed());
+				dto.setIsMaster(master.getIsMaster());
+				dto.setIsOrderable(master.getIsOrderable());
+				dto.setMessage("success");
+				dto.setName(WordUtils.capitalizeFully(master.getName(),delimiters));
+				dto.setOptionsText(master.getOptionsText());
+				dto.setOptionValues(master.getOptionValues());
+				dto.setPrice(master.getDisplayPrice());
+				dto.setSku(master.getSku());
+				dto.setSlug(master.getSlug());
+				dto.setStatus("success");
+				dto.setTotalOnHand(master.getTotalOnHand());
+				dto.setTrackInventory(master.getTrackInventory());
+				dto.setWeight(master.getWeight());
+				dto.setWidth(master.getWidth());
+		}
+		return dto;
+	}
+	
+}

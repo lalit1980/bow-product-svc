@@ -1,24 +1,28 @@
 package com.boozeonwheel.product.repository.category;
 
+import java.util.HashSet;
 import java.util.List;
 
-import com.boozeonwheel.product.domain.category.M_ProductCategory;
+import com.boozeonwheel.product.domain.category.ProductCategory;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
 public interface ProductCategoryRespositoryCustom {
 
-	public List<M_ProductCategory> findByProductTypeCategoryId(int productCategoryTypeId);
+	public List<ProductCategory> findByProductTypeCategoryId(int productCategoryTypeId);
 
-	public List<M_ProductCategory> findByProductTypeCategory(String productTypeCategory);
+	public List<ProductCategory> findByCategoryId(int categoryId);
+	public List<ProductCategory> findByParentIdAndCategoryId(int parentId,int categoryId);
 
-	public List<M_ProductCategory> findByIsActive(Boolean isActive);
+	public List<ProductCategory> findByParentId(int parentCategoryId);
+
 
 	public DeleteResult deleteProductTypeCategory(int productCategoryTypeId);
 
-	public void addAllProductTypeCategories(List<M_ProductCategory> productCategoryType);
+	public void addAllProductTypeCategories(List<ProductCategory> productCategoryType);
 	public void deleteAllProductTypeCategories();
-	public UpdateResult updateProductCategoryType(M_ProductCategory productCategoryType);
+	public UpdateResult updateProductCategoryType(ProductCategory productCategoryType);
+	public List<ProductCategory> findDistinctCategoyByParentId();
 	
 
 	

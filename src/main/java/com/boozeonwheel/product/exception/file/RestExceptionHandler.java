@@ -1,6 +1,6 @@
 package com.boozeonwheel.product.exception.file;
 
-import com.boozeonwheel.product.api.file.ErrorResponse;
+import com.boozeonwheel.product.domain.file.ErrorResponse;
 import com.boozeonwheel.product.exception.file.DataAlreadyExistsException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;

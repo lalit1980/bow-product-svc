@@ -4,6 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.BulkOperations.BulkMode;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -13,7 +17,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.boozeonwheel.product.domain.file.FileMetaData;
-import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -27,10 +30,21 @@ public class FileRepositoryImpl implements FileRespositoryCustom {
 		return mongoTemplate.find(new Query(Criteria.where("fileId").is(fileId)), FileMetaData.class);
 	}
 
+	/*@Override
+	public Page<FileMetaData> findByLiquorCode(long LIQUOR_CODE, int pageNumber, int pageSize) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("LIQUOR_CODE").in(LIQUOR_CODE));
+		Pageable firstPageWithTwoElements = PageRequest.of(pageNumber, pageSize);
+		query.with(firstPageWithTwoElements);
+		long count = mongoTemplate.count(query, FileMetaData.class);
+		List<FileMetaData> list = mongoTemplate.find(query, FileMetaData.class);
+		return new PageImpl<FileMetaData>(list, firstPageWithTwoElements, count);
+	}*/
 	@Override
-	public List<FileMetaData> findByLiquorCode(long LIQUOR_CODE) {
-		return mongoTemplate.find(new Query(Criteria.where("LIQUOR_CODE").is(LIQUOR_CODE)), FileMetaData.class);
-		
+	public List<FileMetaData> findByProductId(long productCode) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("productCode").in(productCode));
+		return mongoTemplate.find(query, FileMetaData.class);
 	}
 
 	@Override
@@ -85,7 +99,7 @@ public class FileRepositoryImpl implements FileRespositoryCustom {
 		Query query=new Query(Criteria.where("fileId").is(fileId));
 		Update update = new Update();
 		update.set("fileId", fileMetaData.getFileId());
-		update.set("LIQUOR_CODE", fileMetaData.getLIQUOR_CODE());
+		update.set("productCode", fileMetaData.getProductCode());
 		update.set("fileName", fileMetaData.getFileName());
 		update.set("contentType", fileMetaData.getContentType());
 		update.set("contentSize", fileMetaData.getContentSize());

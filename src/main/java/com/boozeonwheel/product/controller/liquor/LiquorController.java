@@ -27,7 +27,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.boozeonwheel.product.domain.file.FileMetaData;
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.repository.liquor.LiquorRepository;
-import com.boozeonwheel.product.service.liquor.LiquorService;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -43,14 +42,12 @@ public class LiquorController {
 	@Autowired
 	LiquorRepository liquorRepository;
 	
-	@Autowired
-	LiquorService liquorService;
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@GetMapping("/liquor/v1.0/{LIQUOR_CODE}/{pageNumber}/{pageSize}")
+	@GetMapping("/liquor/v1.0/{LIQUOR_CODE}")
 	@ApiOperation("Returns a specific liquor by their identifier. 404 if does not exist.")
-	public List<M_LIQUOR> get(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE) {
+	public M_LIQUOR get(@PathVariable("LIQUOR_CODE") long LIQUOR_CODE) {
 		
 		return liquorRepository.findByLiquorCode(LIQUOR_CODE);
 		
@@ -109,10 +106,10 @@ public class LiquorController {
 		liquor.setQUANTITY(quantity);
 		liquor.setIS_ACTIVE(isActive);
 		FileMetaData fileMetaData=new FileMetaData();
-		fileMetaData.setLIQUOR_CODE(liquorCode);
+		fileMetaData.setProductCode(liquorCode);
 		fileMetaDataList.add(fileMetaData);
 		liquor.setFileMetaData(fileMetaDataList);
-		liquorService.storeData(file, liquor);
+		//liquorService.storeData(file, liquor);
     }
 	
 	

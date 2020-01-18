@@ -9,7 +9,7 @@ import com.mongodb.client.result.UpdateResult;
 public interface FileRespositoryCustom {
 
 	public List<FileMetaData> findByFileId(long fileId);
-	public List<FileMetaData> findByLiquorCode(long LIQUOR_CODE);
+	public List<FileMetaData> findByProductId(long productId);
 
 	public List<FileMetaData> findByFileName(String fileName);
 	public List<FileMetaData> findByDetails(String details);

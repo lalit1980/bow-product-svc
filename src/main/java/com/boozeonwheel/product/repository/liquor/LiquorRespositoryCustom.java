@@ -11,7 +11,7 @@ import com.mongodb.client.result.UpdateResult;
 
 public interface LiquorRespositoryCustom{
 
-	public List<M_LIQUOR> findByLiquorCode(long liquorCode);
+	public M_LIQUOR findByLiquorCode(long liquorCode);
 
 	public Page<M_LIQUOR> findByLiquorDescription(String liquorDescription,Pageable pageable);
 	public List<M_LIQUOR> findBySupplier(String supplier);

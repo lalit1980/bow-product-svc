@@ -38,41 +38,6 @@ public class BoozeOnWheelApplication {
 						.description("Documentation BoozeOnWheel Product Category API v1.0").build());
 	}
 
-	@Bean
-	public Docket swaggerProductSubCategoryApi10() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Product-Subcategory-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.subcategory"))
-				.paths(regex("/api/productsubcategorytype/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Product Sub Category API")
-						.description("Documentation BoozeOnWheel Product Sub Category API v1.0").build());
-	}
-
-	@Bean
-	public Docket swaggerPriceDecisionFactorApi10() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Price-Decision-Factor-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.pricedecision"))
-				.paths(regex("/api/pricedecisionfactor/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Price Decision Factor API")
-						.description("Documentation BoozeOnWheel Price Decision Factor API v1.0").build());
-	}
-
-	@Bean
-	public Docket swaggerCurrencyDominanceApi10() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Currency-Dominance-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.currencydominance"))
-				.paths(regex("/api/currencydominance/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Currency Dominance Factor API")
-						.description("Documentation BoozeOnWheel Currency Dominance Factor API v1.0").build());
-	}
-	
-	@Bean
-	public Docket swaggerSellerCategoryApi10() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Seller-Category-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.sellercategory"))
-				.paths(regex("/api/sellercategory/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Seller Category API")
-						.description("Documentation BoozeOnWheel Seller Category API v1.0").build());
-	}
 	
 	@Bean
 	public Docket swaggerFileServiceApi10() {
@@ -92,14 +57,43 @@ public class BoozeOnWheelApplication {
 						.description("Documentation BoozeOnWheel liquor Services API v1.0").build());
 	}
 	
+	
 	@Bean
-	public Docket swaggerFileUploadApi10() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("FileUpload-Service-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.file"))
-				.paths(regex("/api/fileupload/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel File Upload services API")
-						.description("Documentation BoozeOnWheel File Upload Services API v1.0").build());
+	public Docket swaggerBannerApi10() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("Banner-Service-API-1.0").select()
+				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.banner"))
+				.paths(regex("/api/v1/taxonomies.*")).build()
+				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Banner services API")
+						.description("Documentation BoozeOnWheel Banner Services API v1.0").build());
 	}
+	
+	@Bean
+	public Docket swaggerProductMasterApi10() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("Product-Service-API-1.0").select()
+				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.master"))
+				.paths(regex("/api/v1/taxons/products.*")).build()
+				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Product Master services API")
+						.description("Documentation BoozeOnWheel Product Master Services API v1.0").build());
+	}
+	
+	@Bean
+	public Docket swaggerMasterApi10() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("Product-Master-Service-API-1.0").select()
+				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.master"))
+				.paths(regex("/api/v1/master.*")).build()
+				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Master services API")
+						.description("Documentation BoozeOnWheel Master Services API v1.0").build());
+	}
+	
+	@Bean
+	public Docket swaggerUrlTypeApi10() {
+		return new Docket(DocumentationType.SWAGGER_2).groupName("URLType-Service-API-1.0").select()
+				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.urltype"))
+				.paths(regex("/api/v1/urltype.*")).build()
+				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel URL Type services API")
+						.description("Documentation BoozeOnWheel URL Type Services API v1.0").build());
+	}
+	
 	@Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurerAdapter() {
