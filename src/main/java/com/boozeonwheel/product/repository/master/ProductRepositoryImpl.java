@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.domain.master.Product;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;

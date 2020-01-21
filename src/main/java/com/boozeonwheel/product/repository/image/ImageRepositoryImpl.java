@@ -1,7 +1,6 @@
 package com.boozeonwheel.product.repository.image;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.bson.Document;
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;
-import com.boozeonwheel.product.domain.master.CategoryDTO;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -82,7 +80,7 @@ public class ImageRepositoryImpl implements ImageRespositoryCustom {
 
 	@Override
 	public UpdateResult updateProductCategoryType(ProductCategory productCategory) {
-		Query query = new Query(Criteria.where("categoryId").is(productCategory.getCategoryId()));
+		Query query = new Query(Criteria.where("id").is(productCategory.getId()));
 		Update update = new Update();
 		update.set("parentCategoryId", productCategory.getParentCategoryId());
 		update.set("categoryName", productCategory.getCategoryName());

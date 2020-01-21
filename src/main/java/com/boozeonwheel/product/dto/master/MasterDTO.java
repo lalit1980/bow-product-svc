@@ -8,7 +8,7 @@ import com.boozeonwheel.product.domain.master.OptionValue;
 
 public class MasterDTO {
 	
-	private Integer id;
+	private long id;
     private String name;
     private String sku;
     private String price;
@@ -33,10 +33,11 @@ public class MasterDTO {
     private String status;
     private String message;
     private Boolean trackInventory;
-	public Integer getId() {
+    private double priceList;
+	public long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -193,6 +194,12 @@ public class MasterDTO {
 	}
 	public void setTrackInventory(Boolean trackInventory) {
 		this.trackInventory = trackInventory;
+	}
+	public double getPriceList() {
+		return priceList;
+	}
+	public void setPriceList(double priceList) {
+		this.priceList = priceList;
 	}
 	
 

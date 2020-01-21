@@ -1,6 +1,5 @@
 package com.boozeonwheel.product.repository.category;
 
-import java.util.HashSet;
 import java.util.List;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;
@@ -9,15 +8,15 @@ import com.mongodb.client.result.UpdateResult;
 
 public interface ProductCategoryRespositoryCustom {
 
-	public List<ProductCategory> findByProductTypeCategoryId(int productCategoryTypeId);
+	public List<ProductCategory> findByProductTypeCategoryId(long productCategoryTypeId);
 
-	public List<ProductCategory> findByCategoryId(int categoryId);
-	public List<ProductCategory> findByParentIdAndCategoryId(int parentId,int categoryId);
+	public List<ProductCategory> findById(long id);
+	public List<ProductCategory> findByParentIdAndCategoryId(long parentId,long categoryId);
 
-	public List<ProductCategory> findByParentId(int parentCategoryId);
+	public List<ProductCategory> findByParentId(long parentCategoryId);
 
 
-	public DeleteResult deleteProductTypeCategory(int productCategoryTypeId);
+	public DeleteResult deleteProductTypeCategory(long productCategoryTypeId);
 
 	public void addAllProductTypeCategories(List<ProductCategory> productCategoryType);
 	public void deleteAllProductTypeCategories();

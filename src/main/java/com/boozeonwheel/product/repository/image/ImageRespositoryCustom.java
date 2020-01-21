@@ -1,6 +1,5 @@
 package com.boozeonwheel.product.repository.image;
 
-import java.util.HashSet;
 import java.util.List;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;

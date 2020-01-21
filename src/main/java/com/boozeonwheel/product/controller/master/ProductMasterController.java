@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boozeonwheel.product.domain.master.CategoryDTO;
@@ -21,6 +20,7 @@ import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.dto.master.MasterDTO;
 import com.boozeonwheel.product.repository.master.ProductMasterRepository;
 import com.boozeonwheel.product.service.category.ProductCategoryBL;
+import com.boozeonwheel.product.service.file.FileSequenceGeneratorService;
 import com.boozeonwheel.product.service.master.ProductMasterBL;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -43,12 +43,15 @@ public class ProductMasterController {
 	@Autowired
 	ProductCategoryBL productCategoryBL;
 	
+	@Autowired
+	FileSequenceGeneratorService fileSeqGen;
 	
 	@PostMapping({ "/v1/master" })
 	@ApiOperation("Creates a new product master.")
 	public ResponseEntity<Master> add(@RequestBody Master master) {
 		
 		try {
+			master.setId(fileSeqGen.generateSequence(Master.SEQUENCE_NAME));
 			return new ResponseEntity<Master>(productMasterRepository.save(master), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<Master>(HttpStatus.NOT_FOUND);
@@ -95,5 +98,11 @@ public class ProductMasterController {
 	public UpdateResult update(@PathVariable("id") int id,
 			@RequestBody MasterDTO master) {
 		return productMasterRepository.updateProductMaster(master);
+	}
+	@PutMapping("/v1/master/{id}/{categoryId}")
+	@ApiOperation("Update category Id data.")
+	public UpdateResult updateCategoryById(@PathVariable("id") int id,
+			@PathVariable("categoryId") int categoryId) {
+		return productMasterRepository.updateCategoryIdByMasterId(id, categoryId);
 	}
 }

@@ -1,15 +1,15 @@
 package com.boozeonwheel.product.domain.master;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import com.boozeonwheel.product.domain.file.FileMetaData;
 
 @Document(collection = "Master")
 public class Master {
-    private Integer id;
+	@Transient
+    public static final String SEQUENCE_NAME = "master_sequence";
+	@Id
+    private long id;
     private String name;
     private String sku;
     private String price;
@@ -21,8 +21,6 @@ public class Master {
     private String slug;
     private String description;
     private Boolean trackInventory;
-    private List<OptionValue> optionValues = new ArrayList<OptionValue>();
-    private List<FileMetaData> images = new ArrayList<FileMetaData>();
     private String displayPrice;
     private String optionsText;
     private Boolean inStock;
@@ -31,10 +29,10 @@ public class Master {
     private Integer totalOnHand;
     private Boolean isDestroyed;
     private Integer categoryId;
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
@@ -103,18 +101,7 @@ public class Master {
 	public void setTrackInventory(Boolean trackInventory) {
 		this.trackInventory = trackInventory;
 	}
-	public List<OptionValue> getOptionValues() {
-		return optionValues;
-	}
-	public void setOptionValues(List<OptionValue> optionValues) {
-		this.optionValues = optionValues;
-	}
-	public List<FileMetaData> getImages() {
-		return images;
-	}
-	public void setImages(List<FileMetaData> images) {
-		this.images = images;
-	}
+	
 	public String getDisplayPrice() {
 		return displayPrice;
 	}
@@ -157,21 +144,21 @@ public class Master {
 	public void setIsDestroyed(Boolean isDestroyed) {
 		this.isDestroyed = isDestroyed;
 	}
-	@Override
-	public String toString() {
-		return "Master [id=" + id + ", name=" + name + ", sku=" + sku + ", price=" + price + ", weight=" + weight
-				+ ", height=" + height + ", width=" + width + ", depth=" + depth + ", isMaster=" + isMaster + ", slug="
-				+ slug + ", description=" + description + ", trackInventory=" + trackInventory + ", optionValues="
-				+ optionValues + ", images=" + images + ", displayPrice=" + displayPrice + ", optionsText="
-				+ optionsText + ", inStock=" + inStock + ", isBackorderable=" + isBackorderable + ", isOrderable="
-				+ isOrderable + ", totalOnHand=" + totalOnHand + ", isDestroyed=" + isDestroyed + ", categoryId="
-				+ categoryId + "]";
-	}
+	
 
 	public Integer getCategoryId() {
 		return categoryId;
 	}
 	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;
+	}
+	@Override
+	public String toString() {
+		return "Master [id=" + id + ", name=" + name + ", sku=" + sku + ", price=" + price + ", weight=" + weight
+				+ ", height=" + height + ", width=" + width + ", depth=" + depth + ", isMaster=" + isMaster + ", slug="
+				+ slug + ", description=" + description + ", trackInventory=" + trackInventory + ", displayPrice="
+				+ displayPrice + ", optionsText=" + optionsText + ", inStock=" + inStock + ", isBackorderable="
+				+ isBackorderable + ", isOrderable=" + isOrderable + ", totalOnHand=" + totalOnHand + ", isDestroyed="
+				+ isDestroyed + ", categoryId=" + categoryId + "]";
 	}
 }

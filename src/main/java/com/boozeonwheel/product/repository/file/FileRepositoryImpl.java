@@ -1,13 +1,8 @@
 package com.boozeonwheel.product.repository.file;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.BulkOperations.BulkMode;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -16,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
+import com.amazonaws.util.CollectionUtils;
 import com.boozeonwheel.product.domain.file.FileMetaData;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -26,20 +22,12 @@ public class FileRepositoryImpl implements FileRespositoryCustom {
 	MongoOperations mongoTemplate;
 
 	@Override
-	public List<FileMetaData> findByFileId(long fileId) {
-		return mongoTemplate.find(new Query(Criteria.where("fileId").is(fileId)), FileMetaData.class);
+	public List<FileMetaData> findByFileId(long id) {
+		return mongoTemplate.find(new Query(Criteria.where("id").is(id)), FileMetaData.class);
+		
+		
 	}
-
-	/*@Override
-	public Page<FileMetaData> findByLiquorCode(long LIQUOR_CODE, int pageNumber, int pageSize) {
-		Query query = new Query();
-		query.addCriteria(Criteria.where("LIQUOR_CODE").in(LIQUOR_CODE));
-		Pageable firstPageWithTwoElements = PageRequest.of(pageNumber, pageSize);
-		query.with(firstPageWithTwoElements);
-		long count = mongoTemplate.count(query, FileMetaData.class);
-		List<FileMetaData> list = mongoTemplate.find(query, FileMetaData.class);
-		return new PageImpl<FileMetaData>(list, firstPageWithTwoElements, count);
-	}*/
+	
 	@Override
 	public List<FileMetaData> findByProductId(long productCode) {
 		Query query = new Query();
@@ -95,20 +83,27 @@ public class FileRepositoryImpl implements FileRespositoryCustom {
 	}
 
 	@Override
-	public UpdateResult updateFileMetaData(FileMetaData fileMetaData, long fileId) {
-		Query query=new Query(Criteria.where("fileId").is(fileId));
+	public UpdateResult updateFileMetaData(FileMetaData fileMetaData, long id) {
+		Query query=new Query(Criteria.where("id").is(id));
 		Update update = new Update();
 		update.set("fileId", fileMetaData.getFileId());
 		update.set("productCode", fileMetaData.getProductCode());
+		update.set("type", fileMetaData.getType());
 		update.set("fileName", fileMetaData.getFileName());
 		update.set("contentType", fileMetaData.getContentType());
 		update.set("contentSize", fileMetaData.getContentSize());
-		
 		update.set("location", fileMetaData.getLocation());
+		update.set("attachmentWidth",fileMetaData.getAttachmentWidth());
 		
-		update.set("uploadedBy", fileMetaData.getS3Path());
-		
-		update.set("updaedAt", new Date().getTime());
+		update.set("attachmentHeight", fileMetaData.getAttachmentHeight());
+		update.set("attachmentUpdatedAt", fileMetaData.getAttachmentUpdatedAt());
+		update.set("viewableId", fileMetaData.getViewableId());
+		update.set("viewableType", fileMetaData.getViewableType());
+		update.set("alt", fileMetaData.getAlt());
+		update.set("position", fileMetaData.getPosition());
+		update.set("urlTypeId", fileMetaData.getUrlTypeId());
+		update.set("urlType", fileMetaData.getUrlType());
+		update.set("s3Path", fileMetaData.getS3Path());
 		
 		return mongoTemplate.updateFirst(query, update, FileMetaData.class);
 	}

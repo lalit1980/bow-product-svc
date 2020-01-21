@@ -39,7 +39,7 @@ import lombok.ToString;
 public class Taxon {
 
     @JsonProperty("id")
-    private Integer id;
+    private long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("pretty_name")
@@ -47,9 +47,9 @@ public class Taxon {
     @JsonProperty("permalink")
     private String permalink;
     @JsonProperty("parent_id")
-    private Integer parent_id;
+    private long parent_id;
     @JsonProperty("taxonomy_id")
-    private Integer taxonomy_id;
+    private long taxonomy_id;
     @JsonProperty("meta_title")
     private String meta_title;
     @JsonProperty("meta_description")
@@ -65,12 +65,12 @@ public class Taxon {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("id")
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
     @JsonProperty("id")
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -125,31 +125,31 @@ public class Taxon {
     }
 
     @JsonProperty("parent_id")
-    public Integer getParentId() {
+    public long getParentId() {
         return parent_id;
     }
 
     @JsonProperty("parent_id")
-    public void setParentId(Integer parentId) {
+    public void setParentId(long parentId) {
         this.parent_id = parentId;
     }
 
-    public Taxon withParentId(Integer parentId) {
+    public Taxon withParentId(long parentId) {
         this.parent_id = parentId;
         return this;
     }
 
     @JsonProperty("taxonomy_id")
-    public Integer getTaxonomyId() {
+    public long getTaxonomyId() {
         return taxonomy_id;
     }
 
     @JsonProperty("taxonomy_id")
-    public void setTaxonomyId(Integer taxonomyId) {
+    public void setTaxonomyId(long taxonomyId) {
         this.taxonomy_id = taxonomyId;
     }
 
-    public Taxon withTaxonomyId(Integer taxonomyId) {
+    public Taxon withTaxonomyId(long taxonomyId) {
         this.taxonomy_id = taxonomyId;
         return this;
     }

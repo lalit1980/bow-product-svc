@@ -8,7 +8,6 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
-import com.boozeonwheel.product.dto.banner.Banner;
 import com.boozeonwheel.product.dto.root.Root;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -33,7 +32,7 @@ import lombok.ToString;
 public class Taxonomy {
 
     @JsonProperty("id")
-    private Integer id;
+    private long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("root")
@@ -51,12 +50,12 @@ public class Taxonomy {
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("id")
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
     @JsonProperty("id")
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -33,7 +33,7 @@ import lombok.ToString;
 public class Root {
 
     @JsonProperty("id")
-    private Integer id;
+    private long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("pretty_name")
@@ -41,27 +41,27 @@ public class Root {
     @JsonProperty("permalink")
     private String permalink;
     @JsonProperty("parent_id")
-    private Object parent_id;
+    private long parent_id;
     @JsonProperty("taxonomy_id")
-    private Integer taxonomy_id;
+    private long taxonomy_id;
     @JsonProperty("meta_title")
-    private Object metaTitle;
+    private String metaTitle;
     @JsonProperty("meta_description")
-    private Object metaDescription;
+    private String metaDescription;
     @JsonProperty("taxons")
     private List<Taxon> taxons = new ArrayList<Taxon>();
 
     @JsonProperty("id")
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
     @JsonProperty("id")
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public Root withId(Integer id) {
+    public Root withId(long id) {
         this.id = id;
         return this;
     }
@@ -117,56 +117,56 @@ public class Root {
     }
 
     @JsonProperty("parent_id")
-    public void setParentId(Object parentId) {
+    public void setParentId(long parentId) {
         this.parent_id = parentId;
     }
 
-    public Root withParentId(Object parentId) {
+    public Root withParentId(long parentId) {
         this.parent_id = parentId;
         return this;
     }
 
     @JsonProperty("taxonomy_id")
-    public Integer getTaxonomyId() {
+    public long getTaxonomyId() {
         return taxonomy_id;
     }
 
     @JsonProperty("taxonomy_id")
-    public void setTaxonomyId(Integer taxonomyId) {
+    public void setTaxonomyId(long taxonomyId) {
         this.taxonomy_id = taxonomyId;
     }
 
-    public Root withTaxonomyId(Integer taxonomyId) {
+    public Root withTaxonomyId(long taxonomyId) {
         this.taxonomy_id = taxonomyId;
         return this;
     }
 
     @JsonProperty("meta_title")
-    public Object getMetaTitle() {
+    public String getMetaTitle() {
         return metaTitle;
     }
 
     @JsonProperty("meta_title")
-    public void setMetaTitle(Object metaTitle) {
+    public void setMetaTitle(String metaTitle) {
         this.metaTitle = metaTitle;
     }
 
-    public Root withMetaTitle(Object metaTitle) {
+    public Root withMetaTitle(String metaTitle) {
         this.metaTitle = metaTitle;
         return this;
     }
 
     @JsonProperty("meta_description")
-    public Object getMetaDescription() {
+    public String getMetaDescription() {
         return metaDescription;
     }
 
     @JsonProperty("meta_description")
-    public void setMetaDescription(Object metaDescription) {
+    public void setMetaDescription(String metaDescription) {
         this.metaDescription = metaDescription;
     }
 
-    public Root withMetaDescription(Object metaDescription) {
+    public Root withMetaDescription(String metaDescription) {
         this.metaDescription = metaDescription;
         return this;
     }

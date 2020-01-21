@@ -2,8 +2,6 @@ package com.boozeonwheel.product.domain.file;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Value;
 
 
 @ApiModel(description = "A response of file upload operation")

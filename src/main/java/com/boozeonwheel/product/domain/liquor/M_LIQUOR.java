@@ -6,9 +6,10 @@ import org.springframework.data.mongodb.core.index.IndexDirection;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.boozeonwheel.product.domain.file.FileMetaData;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import com.boozeonwheel.product.domain.file.FileMetaData;
 
 @Document(collection = "M_LIQUOR")
 @ApiModel(description = "Class representing a liquor master data and tracked by the application.")

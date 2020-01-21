@@ -1,7 +1,10 @@
 package com.boozeonwheel.product.exception.file;
 
-import com.boozeonwheel.product.domain.file.ErrorResponse;
-import com.boozeonwheel.product.exception.file.DataAlreadyExistsException;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.annotation.Order;
@@ -16,11 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.servlet.http.HttpServletRequest;
-
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import com.boozeonwheel.product.domain.file.ErrorResponse;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice

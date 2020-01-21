@@ -1,4 +1,4 @@
-package com.boozeonwheel.product.controller.s3servcie;
+package com.boozeonwheel.product.controller.file;
 
 import java.util.List;
 
@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.boozeonwheel.product.client.AmazonClient;
+import com.amazonaws.util.CollectionUtils;
 import com.boozeonwheel.product.domain.file.FileMetaData;
+import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.repository.file.FileRepository;
+import com.boozeonwheel.product.service.file.FileService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,21 +28,22 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/api")
 @Api(description = "Set of endpoints for upload, delete and get files from S3 bucket.")
-public class S3UploadController {
+public class FileController {
 
-	private AmazonClient amazonClient;
+	private FileService fileService;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	S3UploadController(AmazonClient amazonClient) {
-		this.amazonClient = amazonClient;
+	FileController(FileService fileService) {
+		this.fileService = fileService;
 	}
-
 	
+
+	public static final String SAMPLE_XLSX_FILE_PATH = "/Users/apple/Downloads/CLASSIC_WORK1.xls";
 	@Autowired
 	FileRepository fileRepository;
 
 	@GetMapping("/fileservice/v1.0/{productCode}")
-    public ResponseEntity<List<FileMetaData>> getCategory(
+    public ResponseEntity<List<FileMetaData>> getCategoryByProductId(
     		@PathVariable("productCode") long productCode) {
 		try {
 			return new ResponseEntity<List<FileMetaData>>(fileRepository.findByProductId(productCode), HttpStatus.OK); 
@@ -48,19 +51,48 @@ public class S3UploadController {
 			return new ResponseEntity<List<FileMetaData>>(HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	@GetMapping("/fileservice/v1.0/supplier/supplierdata")
+    public void loadSupplierData() {
+		try {
+			fileService.readSupplierData(SAMPLE_XLSX_FILE_PATH); 
+		} catch (Exception e) {
+			
+		}
+	}
+	
+	@GetMapping("/fileservice/v1.0/category/{id}")
+    public ResponseEntity<FileMetaData> getFileMetaDataById(
+    		@PathVariable("id") long id) {
+		try {
+			List<FileMetaData> fileDataList=fileRepository.findByFileId(id);
+			if(!CollectionUtils.isNullOrEmpty(fileDataList) ) {
+				return new ResponseEntity<FileMetaData>(fileDataList.get(0), HttpStatus.OK);
+			}else {
+				FileMetaData meta=new FileMetaData();
+				
+				return new ResponseEntity<FileMetaData>(meta, HttpStatus.OK);
+			}
+			 
+		} catch (Exception e) {
+			return new ResponseEntity<FileMetaData>(HttpStatus.NOT_FOUND);
+		}
+	}
 
-	@PostMapping({ "/fileservice/v1.0/{productCode}/{urlId}" })
+	@PostMapping({ "/fileservice/v1.0/{productCode}/{id}/{urlId}/{action}" })
 	@ApiOperation("Uploads files to S3 bucket.")
 	public ResponseEntity<String> uploadFile(
 			@RequestPart(value = "file") MultipartFile file,
 			@PathVariable("productCode") long productCode,
-			@PathVariable("urlId") Integer urlTypeId) {
-		return new ResponseEntity<String>(this.amazonClient.uploadFile(file,productCode,urlTypeId), HttpStatus.OK); 
+			@PathVariable("id") long id,
+			@PathVariable("urlId") Integer urlTypeId,
+			@PathVariable("action") String action) {
+		return new ResponseEntity<String>(this.fileService.uploadFile(file,productCode,id,urlTypeId,action), HttpStatus.OK); 
     }
 
 	@DeleteMapping("/fileservice/v1.0")
 	@ApiOperation("Deletes files to S3 bucket.")
 	public String deleteFile(@RequestPart(value = "url") String fileUrl) {
-		return this.amazonClient.deleteFileFromS3Bucket(fileUrl);
+		return this.fileService.deleteFileFromS3Bucket(fileUrl);
 	}
 }

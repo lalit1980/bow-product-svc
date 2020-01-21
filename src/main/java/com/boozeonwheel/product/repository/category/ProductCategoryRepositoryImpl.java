@@ -1,7 +1,6 @@
 package com.boozeonwheel.product.repository.category;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.bson.Document;
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;
-import com.boozeonwheel.product.domain.master.CategoryDTO;
 import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -27,14 +25,14 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRespository
 	MongoOperations mongoTemplate;
 
 	@Override
-	public List<ProductCategory> findByProductTypeCategoryId(int productCategoryTypeId) {
-		return mongoTemplate.find(new Query(Criteria.where("categoryId").is(productCategoryTypeId)),
+	public List<ProductCategory> findByProductTypeCategoryId(long productCategoryTypeId) {
+		return mongoTemplate.find(new Query(Criteria.where("id").is(productCategoryTypeId)),
 				ProductCategory.class);
 	}
 
 	@Override
-	public List<ProductCategory> findByCategoryId(int categoryId) {
-		Query query = new Query(Criteria.where("categoryId").is(categoryId));
+	public List<ProductCategory> findById(long id) {
+		Query query = new Query(Criteria.where("id").is(id));
 		// BasicQuery query = new BasicQuery("{\"categoryId\": {$regex : '" + categoryId
 		// + "'} }");
 		query.limit(10);
@@ -43,15 +41,15 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRespository
 	}
 
 	@Override
-	public List<ProductCategory> findByParentId(int parentCategoryId) {
+	public List<ProductCategory> findByParentId(long parentCategoryId) {
 		Query query = new Query(Criteria.where("parentCategoryId").is(parentCategoryId));
 		return mongoTemplate.find(query, ProductCategory.class);
 
 	}
 
 	@Override
-	public List<ProductCategory> findByParentIdAndCategoryId(int parentId, int categoryId) {
-		Query query = new Query(Criteria.where("parentCategoryId").is(parentId).and("categoryId").is(categoryId));
+	public List<ProductCategory> findByParentIdAndCategoryId(long parentId, long id) {
+		Query query = new Query(Criteria.where("parentCategoryId").is(parentId).and("id").is(id));
 		// BasicQuery query = new BasicQuery("{\"categoryId\": {$regex : '" + categoryId
 		// + "'} }");
 		query.limit(10);
@@ -60,8 +58,8 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRespository
 	}
 
 	@Override
-	public DeleteResult deleteProductTypeCategory(int categoryId) {
-		Query query = new Query(Criteria.where("categoryId").is(categoryId));
+	public DeleteResult deleteProductTypeCategory(long id) {
+		Query query = new Query(Criteria.where("id").is(id));
 		return mongoTemplate.remove(query, ProductCategory.class);
 	}
 
@@ -82,7 +80,7 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRespository
 
 	@Override
 	public UpdateResult updateProductCategoryType(ProductCategory productCategory) {
-		Query query = new Query(Criteria.where("categoryId").is(productCategory.getCategoryId()));
+		Query query = new Query(Criteria.where("id").is(productCategory.getId()));
 		Update update = new Update();
 		update.set("parentCategoryId", productCategory.getParentCategoryId());
 		update.set("categoryName", productCategory.getCategoryName());

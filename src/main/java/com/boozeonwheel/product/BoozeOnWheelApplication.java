@@ -42,20 +42,12 @@ public class BoozeOnWheelApplication {
 	@Bean
 	public Docket swaggerFileServiceApi10() {
 		return new Docket(DocumentationType.SWAGGER_2).groupName("S3-File-Service-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.s3servcie"))
+				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.file"))
 				.paths(regex("/api/fileservice/v1.0.*")).build()
 				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel File services for S3 bucket API")
 						.description("Documentation BoozeOnWheel File Services For S3 Bucket API v1.0").build());
 	}
 	
-	@Bean
-	public Docket swaggerLiquorServiceApi10() {
-		return new Docket(DocumentationType.SWAGGER_2).groupName("Liquor-Service-API-1.0").select()
-				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.liquor"))
-				.paths(regex("/api/liquor/v1.0.*")).build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Liquor services API")
-						.description("Documentation BoozeOnWheel liquor Services API v1.0").build());
-	}
 	
 	
 	@Bean

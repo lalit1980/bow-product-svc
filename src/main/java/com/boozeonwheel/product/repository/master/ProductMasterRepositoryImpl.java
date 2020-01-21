@@ -83,5 +83,13 @@ public class ProductMasterRepositoryImpl implements ProductMasterRespositoryCust
 		update.set("images", master.getImages());
 		return mongoTemplate.updateFirst(query, update, Master.class);
 	}
+
+	@Override
+	public UpdateResult updateCategoryIdByMasterId(Integer id, Integer CategoryId) {
+		Query query = new Query(Criteria.where("id").is(id));
+		Update update = new Update();
+		update.set("categoryId", CategoryId);
+		return mongoTemplate.updateFirst(query, update, Master.class);
+	}
 	 
 }

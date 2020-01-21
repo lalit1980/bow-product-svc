@@ -7,11 +7,13 @@ import org.apache.commons.text.WordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.util.CollectionUtils;
 import com.boozeonwheel.product.domain.category.ProductCategory;
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.dto.master.MasterDTO;
 import com.boozeonwheel.product.repository.category.ProductCategoryRepository;
+import com.boozeonwheel.product.repository.file.FileRepository;
 import com.boozeonwheel.product.repository.liquor.LiquorRepository;
 import com.boozeonwheel.product.repository.master.ProductMasterRepository;
 
@@ -26,6 +28,10 @@ public class ProductMasterBL {
 	
 	@Autowired
 	LiquorRepository liquorRepository;
+	
+	@Autowired
+	FileRepository fileRepository;
+	
 	
 	public void mapLiquorToProduct() {		
 		List<M_LIQUOR> lisquorList=liquorRepository.findAll();
@@ -55,19 +61,51 @@ public class ProductMasterBL {
 	
 	}
 	public List<MasterDTO> getMasterDataByCategory(int categoryId) {
-		List<Master> masterList=productMasterRepository.findByProductCategoryId(categoryId);
+		List<Master> masterList=productMasterRepository.findAll();
 		List<MasterDTO> dtoList=new ArrayList<MasterDTO>();
-		if((masterList!=null && masterList.size()>0)) {
-			for (Master master : masterList) {
-				MasterDTO dto=new MasterDTO();
-				dto.setCategoryId(master.getCategoryId());
-				dto.setCategoryName(productCategoryRepository.findByCategoryId(categoryId).get(0).getCategoryName());
-				dto.setId(master.getId());
-				dto.setDisplayPrice(master.getDisplayPrice());
-				dto.setName(master.getName());
-				dtoList.add(dto);
+		try {
+			if((masterList!=null && masterList.size()>0)) {
+				for (Master master : masterList) {
+					MasterDTO dto=new MasterDTO();
+					if(master.getCategoryId()==0) {
+						dto.setCategoryId(3);
+					}else{
+						dto.setCategoryId(master.getCategoryId());
+					}
+					
+					System.out.println("Sku Code: "+master.getSku()+" Find by Category Id: "+master.getCategoryId());
+					List<ProductCategory> list=productCategoryRepository.findById(master.getCategoryId());
+					if(!CollectionUtils.isNullOrEmpty(list) ) {
+						dto.setCategoryName(productCategoryRepository.findById(master.getCategoryId()).get(0).getCategoryName());
+					}
+					dto.setId(master.getId());
+					dto.setDisplayPrice(master.getDisplayPrice());
+					dto.setName(master.getName());
+					dto.setCategoryId(2);
+					dto.setSku(master.getSku());
+					dto.setWidth(master.getWidth());
+					dto.setHeight(master.getHeight());
+					dto.setDepth(master.getDepth());
+					dto.setDescription(master.getDescription());
+					dto.setPrice(master.getPrice());
+					dto.setInStock(master.getInStock());
+					dto.setIsBackorderable(master.getInStock());
+					dto.setIsMaster(master.getIsMaster());
+					dto.setIsOrderable(master.getIsOrderable());
+					dto.setOptionsText(master.getOptionsText());
+					dto.setSlug(master.getSlug());
+					dto.setTotalOnHand(master.getTotalOnHand());
+					dto.setTrackInventory(master.getTrackInventory());
+					dto.setWeight(master.getWeight());
+					dto.setImages(fileRepository.findByProductId(master.getId()));
+					//dto.setOptionValues(master.getOptionValues());
+					dtoList.add(dto);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 		
 		return dtoList;
 	}
@@ -79,14 +117,14 @@ public class ProductMasterBL {
 		if((master!=null)) {
 				dto=new MasterDTO();
 				dto.setCategoryId(master.getCategoryId());
-				ProductCategory category=productCategoryRepository.findByCategoryId(master.getCategoryId()).get(0);
+				ProductCategory category=productCategoryRepository.findById(master.getCategoryId()).get(0);
 				dto.setCategoryName(category.getCategoryName());
 				dto.setDepth(master.getDepth());
 				dto.setDescription(master.getDescription());
 				dto.setDisplayPrice(master.getDisplayPrice());
 				dto.setHeight(master.getHeight());
 				dto.setId(master.getId());
-				dto.setImages(master.getImages());
+				dto.setImages(fileRepository.findByProductId(master.getId()));
 				dto.setInStock(master.getInStock());
 				dto.setIsBackorderable(master.getIsBackorderable());
 				dto.setIsDestroyed(master.getIsDestroyed());
@@ -95,7 +133,7 @@ public class ProductMasterBL {
 				dto.setMessage("success");
 				dto.setName(WordUtils.capitalizeFully(master.getName(),delimiters));
 				dto.setOptionsText(master.getOptionsText());
-				dto.setOptionValues(master.getOptionValues());
+				//dto.setOptionValues(master.getOptionValues());
 				dto.setPrice(master.getDisplayPrice());
 				dto.setSku(master.getSku());
 				dto.setSlug(master.getSlug());

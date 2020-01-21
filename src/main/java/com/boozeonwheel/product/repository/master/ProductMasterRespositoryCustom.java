@@ -14,5 +14,6 @@ public interface ProductMasterRespositoryCustom {
 	public void addAllProductMasters(List<Master> masterList);
 	public void deleteAllProductMaster();
 	public UpdateResult updateProductMaster(MasterDTO master);
+	public UpdateResult updateCategoryIdByMasterId(Integer id, Integer CategoryId);
 
 }

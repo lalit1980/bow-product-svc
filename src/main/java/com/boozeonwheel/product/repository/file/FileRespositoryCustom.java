@@ -8,7 +8,7 @@ import com.mongodb.client.result.UpdateResult;
 
 public interface FileRespositoryCustom {
 
-	public List<FileMetaData> findByFileId(long fileId);
+	public List<FileMetaData> findByFileId(long id);
 	public List<FileMetaData> findByProductId(long productId);
 
 	public List<FileMetaData> findByFileName(String fileName);

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;
 import com.boozeonwheel.product.repository.category.ProductCategoryRepository;
+import com.boozeonwheel.product.service.file.FileSequenceGeneratorService;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 
@@ -26,37 +27,40 @@ import io.swagger.annotations.ApiOperation;
 public class ProductCategoryTypeController {
 	@Autowired
 	ProductCategoryRepository productCategoryRepository;
+
+	@Autowired
+	FileSequenceGeneratorService fileSeq;
 	
-	
-	@GetMapping("/productcategorytype/v1.0/{categoryId}")
+	@GetMapping("/productcategorytype/v1.0/{id}")
 	@ApiOperation("Returns a specific Product Category Type by their identifier. 404 if does not exist.")
-	public List<ProductCategory> get(@PathVariable("categoryId") int productCategoryTypeId) {
-		return productCategoryRepository.findByProductTypeCategoryId(productCategoryTypeId);
+	public List<ProductCategory> get(@PathVariable("id") long id) {
+		return productCategoryRepository.findByProductTypeCategoryId(id);
 	}
 	
 	
-	@GetMapping("/productcategorytype/v1.0/categoryId/{categoryId}")
+	@GetMapping("/productcategorytype/v1.0/categoryId/{id}")
 	@ApiOperation("Returns a specific Category ID. 404 if does not exist.")
-	public List<ProductCategory> getCategoryId(@PathVariable("categoryId") int categoryId) {
-		return productCategoryRepository.findByCategoryId(categoryId);
+	public List<ProductCategory> getCategoryId(@PathVariable("id") long id) {
+		return productCategoryRepository.findById(id);
 	}
 	
 	@GetMapping("/productcategorytype/v1.0/parentId/{parentId}/categoryId/{categoryId}")
 	@ApiOperation("Returns a specific Category ID. 404 if does not exist.")
-	public List<ProductCategory> getParentIdAndCategoryId(@PathVariable("parentId") int parentId,
-			@PathVariable("categoryId") int categoryId) {
-		return productCategoryRepository.findByCategoryId(categoryId);
+	public List<ProductCategory> getParentIdAndCategoryId(@PathVariable("parentId") long parentId,
+			@PathVariable("categoryId") long categoryId) {
+		return productCategoryRepository.findById(categoryId);
 	}
 	
 	@GetMapping("/productcategorytype/v1.0/master/parentCategoryId/{parentCategoryId}")
 	@ApiOperation("Returns a specific Parent Category ID. 404 if does not exist.")
-	public List<ProductCategory> getByParentId(@PathVariable("parentCategoryId") int parentCategoryId) {
+	public List<ProductCategory> getByParentId(@PathVariable("parentCategoryId") long parentCategoryId) {
 		return productCategoryRepository.findByParentId(parentCategoryId);
 	}
 
 	@PostMapping({ "/productcategorytype/v1.0" })
 	@ApiOperation("Creates a new product category type.")
 	public ProductCategory add(@RequestBody ProductCategory productCategory) {
+		productCategory.setId(fileSeq.generateSequence(ProductCategory.SEQUENCE_NAME));
 		return productCategoryRepository.save(productCategory);
 	}
 
@@ -67,10 +71,10 @@ public class ProductCategoryTypeController {
 		return productCategoryRepository.updateProductCategoryType(productCategory);
 	}
 
-	@DeleteMapping({ "/productcategorytype/v1.0/{categoryId}" })
+	@DeleteMapping({ "/productcategorytype/v1.0/{id}" })
 	@ApiOperation("Deletes a product category type from the system. 404 if the person's identifier is not found.")
-	public DeleteResult delete(@PathVariable("categoryId") int productCategoryTypeId) {
-		return productCategoryRepository.deleteProductTypeCategory(productCategoryTypeId);
+	public DeleteResult delete(@PathVariable("id") long id) {
+		return productCategoryRepository.deleteProductTypeCategory(id);
 	}
 	@ApiOperation("Returns list of all Product Category Type in the system.")
 	@GetMapping("/productcategorytype/v1.0")

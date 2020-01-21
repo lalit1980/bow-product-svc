@@ -3,12 +3,17 @@ package com.boozeonwheel.product.domain.master;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Document(collection = "Product")
 public class Product {
-    private Integer id;
+	@Transient
+    public static final String SEQUENCE_NAME = "product_sequence";
+	@Id
+    private long id;
     private String name;
     private String description;
     private String price;
@@ -29,10 +34,10 @@ public class Product {
     private List<String> productProperties = new ArrayList<String>();
    
     private Boolean hasVariants;
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getName() {
