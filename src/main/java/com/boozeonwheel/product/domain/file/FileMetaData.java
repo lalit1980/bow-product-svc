@@ -147,16 +147,6 @@ public class FileMetaData {
 		this.viewableId = viewableId;
 	}
 
-	@Override
-	public String toString() {
-		return "FileMetaData [id=" + id + ", fileId=" + fileId + ", productCode=" + productCode + ", type=" + type
-				+ ", fileName=" + fileName + ", contentType=" + contentType + ", contentSize=" + contentSize
-				+ ", location=" + location + ", attachmentWidth=" + attachmentWidth + ", attachmentHeight="
-				+ attachmentHeight + ", attachmentUpdatedAt=" + attachmentUpdatedAt + ", viewableId=" + viewableId
-				+ ", viewableType=" + viewableType + ", alt=" + alt + ", position=" + position + ", urlTypeId="
-				+ urlTypeId + ", urlType=" + urlType + ", s3Path=" + s3Path + "]";
-	}
-
 	public Integer getPosition() {
 		return position;
 	}
@@ -204,6 +194,17 @@ public class FileMetaData {
 	public void setUrlType(String urlType) {
 		this.urlType = urlType;
 	}
+
+	@Override
+	public String toString() {
+		return "FileMetaData [id=" + id + ", fileId=" + fileId + ", productCode=" + productCode + ", type=" + type
+				+ ", fileName=" + fileName + ", contentType=" + contentType + ", contentSize=" + contentSize
+				+ ", location=" + location + ", attachmentWidth=" + attachmentWidth + ", attachmentHeight="
+				+ attachmentHeight + ", attachmentUpdatedAt=" + attachmentUpdatedAt + ", viewableId=" + viewableId
+				+ ", viewableType=" + viewableType + ", alt=" + alt + ", position=" + position + ", urlTypeId="
+				+ urlTypeId + ", urlType=" + urlType + ", s3Path=" + s3Path + "]";
+	}
+
     
     
 }

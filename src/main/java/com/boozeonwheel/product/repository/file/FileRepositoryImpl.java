@@ -24,8 +24,6 @@ public class FileRepositoryImpl implements FileRespositoryCustom {
 	@Override
 	public List<FileMetaData> findByFileId(long id) {
 		return mongoTemplate.find(new Query(Criteria.where("id").is(id)), FileMetaData.class);
-		
-		
 	}
 	
 	@Override

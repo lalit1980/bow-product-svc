@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.util.CollectionUtils;
 import com.boozeonwheel.product.domain.file.FileMetaData;
-import com.boozeonwheel.product.domain.master.Master;
+import com.boozeonwheel.product.dto.file.FileUploadResponse;
 import com.boozeonwheel.product.repository.file.FileRepository;
 import com.boozeonwheel.product.service.file.FileService;
 
@@ -61,6 +61,8 @@ public class FileController {
 		}
 	}
 	
+	
+	
 	@GetMapping("/fileservice/v1.0/category/{id}")
     public ResponseEntity<FileMetaData> getFileMetaDataById(
     		@PathVariable("id") long id) {
@@ -81,13 +83,14 @@ public class FileController {
 
 	@PostMapping({ "/fileservice/v1.0/{productCode}/{id}/{urlId}/{action}" })
 	@ApiOperation("Uploads files to S3 bucket.")
-	public ResponseEntity<String> uploadFile(
+	public ResponseEntity<FileUploadResponse> uploadFile(
 			@RequestPart(value = "file") MultipartFile file,
 			@PathVariable("productCode") long productCode,
 			@PathVariable("id") long id,
 			@PathVariable("urlId") Integer urlTypeId,
 			@PathVariable("action") String action) {
-		return new ResponseEntity<String>(this.fileService.uploadFile(file,productCode,id,urlTypeId,action), HttpStatus.OK); 
+		this.fileService.uploadFile(file,productCode,id,urlTypeId,action);
+		return new ResponseEntity<FileUploadResponse>(new FileUploadResponse(fileService.uploadFile(file,productCode,id,urlTypeId,action)), HttpStatus.OK); 
     }
 
 	@DeleteMapping("/fileservice/v1.0")

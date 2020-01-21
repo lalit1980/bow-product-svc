@@ -28,7 +28,7 @@ public class MasterDTO {
     private Boolean isOrderable;
     private Integer totalOnHand;
     private Boolean isDestroyed;
-    private Integer categoryId;
+    private long categoryId;
     private String categoryName;
     private String status;
     private String message;
@@ -154,10 +154,10 @@ public class MasterDTO {
 	public void setIsDestroyed(Boolean isDestroyed) {
 		this.isDestroyed = isDestroyed;
 	}
-	public Integer getCategoryId() {
+	public long getCategoryId() {
 		return categoryId;
 	}
-	public void setCategoryId(Integer categoryId) {
+	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
 	public String getCategoryName() {

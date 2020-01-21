@@ -21,21 +21,21 @@ public class ProductMasterRepositoryImpl implements ProductMasterRespositoryCust
 	MongoOperations mongoTemplate;
 	
 	@Override
-	public Master findByProductMasterId(Integer id) {
+	public Master findByProductMasterId(long id) {
 		Query query = new Query(Criteria.where("id").is(id));
 		Master master=mongoTemplate.find(query, Master.class).get(0);
 		return master;
 	}
 	
 	@Override
-	public List<Master> findByProductCategoryId(Integer categoryId) {
+	public List<Master> findByProductCategoryId(long categoryId) {
 		Query query = new Query(Criteria.where("categoryId").is(categoryId));
 		List<Master> master=mongoTemplate.find(query, Master.class);
 		return master;
 	}
 
 	@Override
-	public DeleteResult deleteProductMaster(Integer id) {
+	public DeleteResult deleteProductMaster(long id) {
 		Query query = new Query(Criteria.where("id").is(id));
 		return mongoTemplate.remove(query, Master.class);
 	}

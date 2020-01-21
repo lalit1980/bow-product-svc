@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;
-import com.boozeonwheel.product.domain.master.CategoryDTO;
+import com.boozeonwheel.product.dto.master.CategoryDTO;
 import com.boozeonwheel.product.dto.root.Root;
 import com.boozeonwheel.product.dto.taxonomies.HomeResult;
 import com.boozeonwheel.product.dto.taxonomies.Taxonomy;

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.boozeonwheel.product.domain.master.CategoryDTO;
 import com.boozeonwheel.product.domain.master.Master;
+import com.boozeonwheel.product.dto.master.CategoryDTO;
 import com.boozeonwheel.product.dto.master.MasterDTO;
 import com.boozeonwheel.product.repository.master.ProductMasterRepository;
 import com.boozeonwheel.product.service.category.ProductCategoryBL;

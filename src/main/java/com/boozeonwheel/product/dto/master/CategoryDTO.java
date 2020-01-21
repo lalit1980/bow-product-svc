@@ -1,4 +1,4 @@
-package com.boozeonwheel.product.domain.master;
+package com.boozeonwheel.product.dto.master;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

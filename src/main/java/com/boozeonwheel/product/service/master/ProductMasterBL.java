@@ -60,8 +60,8 @@ public class ProductMasterBL {
 		}
 	
 	}
-	public List<MasterDTO> getMasterDataByCategory(int categoryId) {
-		List<Master> masterList=productMasterRepository.findAll();
+	public List<MasterDTO> getMasterDataByCategory(long categoryId) {
+		List<Master> masterList=productMasterRepository.findByProductCategoryId(categoryId);
 		List<MasterDTO> dtoList=new ArrayList<MasterDTO>();
 		try {
 			if((masterList!=null && masterList.size()>0)) {
@@ -110,7 +110,7 @@ public class ProductMasterBL {
 		return dtoList;
 	}
 
-	public MasterDTO getMasterDataByProductId(int id) {
+	public MasterDTO getMasterDataByProductId(long id) {
 		Master master=productMasterRepository.findByProductMasterId(id);
 		final char[] delimiters = { ' ', '_' };
 		MasterDTO dto=null;

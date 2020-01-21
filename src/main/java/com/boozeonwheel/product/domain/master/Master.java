@@ -28,7 +28,7 @@ public class Master {
     private Boolean isOrderable;
     private Integer totalOnHand;
     private Boolean isDestroyed;
-    private Integer categoryId;
+    private long categoryId;
 	public long getId() {
 		return id;
 	}
@@ -146,10 +146,10 @@ public class Master {
 	}
 	
 
-	public Integer getCategoryId() {
+	public long getCategoryId() {
 		return categoryId;
 	}
-	public void setCategoryId(Integer categoryId) {
+	public void setCategoryId(long categoryId) {
 		this.categoryId = categoryId;
 	}
 	@Override
