@@ -32,15 +32,15 @@ public class ProductCategory {
 	private String metaTitle;
 	private String metaDescription;
 	private String description;
-	private String bannerImage;
-	private String icon;
+	private Boolean isMasterCategory;
+	private Boolean isMasterSubCategory;
+	public long getId() {
+		return id;
+	}
+	public void setId(long id) {
+		this.id = id;
+	}
 	
-	public long getParentCategoryId() {
-		return parentCategoryId;
-	}
-	public void setParentCategoryId(int parentCategoryId) {
-		this.parentCategoryId = parentCategoryId;
-	}
 	public String getCategoryName() {
 		return categoryName;
 	}
@@ -52,6 +52,12 @@ public class ProductCategory {
 	}
 	public void setPrettyName(String prettyName) {
 		this.prettyName = prettyName;
+	}
+	public String getPermalink() {
+		return permalink;
+	}
+	public void setPermalink(String permalink) {
+		this.permalink = permalink;
 	}
 	public long getTaxonomyId() {
 		return taxonomyId;
@@ -77,38 +83,30 @@ public class ProductCategory {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getBannerImage() {
-		return bannerImage;
-	}
-	public void setBannerImage(String bannerImage) {
-		this.bannerImage = bannerImage;
-	}
-	public String getIcon() {
-		return icon;
-	}
-	public void setIcon(String icon) {
-		this.icon = icon;
-	}
 	
-	public String getPermalink() {
-		return permalink;
+	public Boolean getIsMasterCategory() {
+		return isMasterCategory;
 	}
-	public void setPermalink(String permalink) {
-		this.permalink = permalink;
+	public void setIsMasterCategory(Boolean isMasterCategory) {
+		this.isMasterCategory = isMasterCategory;
 	}
-	public long getId() {
-		return id;
+	public Boolean getIsMasterSubCategory() {
+		return isMasterSubCategory;
 	}
-	public void setId(long id) {
-		this.id = id;
+	public void setIsMasterSubCategory(Boolean isMasterSubCategory) {
+		this.isMasterSubCategory = isMasterSubCategory;
+	}
+	public long getParentCategoryId() {
+		return parentCategoryId;
+	}
+	public void setParentCategoryId(long parentCategoryId) {
+		this.parentCategoryId = parentCategoryId;
 	}
 	@Override
 	public String toString() {
 		return "ProductCategory [id=" + id + ", parentCategoryId=" + parentCategoryId + ", categoryName=" + categoryName
 				+ ", prettyName=" + prettyName + ", permalink=" + permalink + ", taxonomyId=" + taxonomyId
 				+ ", metaTitle=" + metaTitle + ", metaDescription=" + metaDescription + ", description=" + description
-				+ ", bannerImage=" + bannerImage + ", icon=" + icon + "]";
+				+ ", isMasterCategory=" + isMasterCategory + ", isMasterSubCategory=" + isMasterSubCategory + "]";
 	}
-	
-	
 }

@@ -18,8 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.util.CollectionUtils;
 import com.boozeonwheel.product.domain.file.FileMetaData;
+import com.boozeonwheel.product.domain.file.ProductCategoryFileMetaData;
 import com.boozeonwheel.product.dto.file.FileUploadResponse;
+import com.boozeonwheel.product.dto.file.ProductCategoryFileUploadResponse;
 import com.boozeonwheel.product.repository.file.FileRepository;
+import com.boozeonwheel.product.repository.file.ProductCategoryFileRepository;
 import com.boozeonwheel.product.service.file.FileService;
 
 import io.swagger.annotations.Api;
@@ -31,6 +34,7 @@ import io.swagger.annotations.ApiOperation;
 public class FileController {
 
 	private FileService fileService;
+	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	FileController(FileService fileService) {
@@ -41,6 +45,9 @@ public class FileController {
 	public static final String SAMPLE_XLSX_FILE_PATH = "/Users/apple/Downloads/CLASSIC_WORK1.xls";
 	@Autowired
 	FileRepository fileRepository;
+	
+	@Autowired
+	ProductCategoryFileRepository categoryfileRepository;
 
 	@GetMapping("/fileservice/v1.0/{productCode}")
     public ResponseEntity<List<FileMetaData>> getCategoryByProductId(
@@ -61,7 +68,15 @@ public class FileController {
 		}
 	}
 	
-	
+	@GetMapping("/fileservice/v1.0/product/category/{productCategoryId}")
+    public ResponseEntity<List<ProductCategoryFileMetaData>> getProductFileMetadataByCategoryId(
+    		@PathVariable("productCategoryId") long productCategoryId) {
+		try {
+			return new ResponseEntity<List<ProductCategoryFileMetaData>>(categoryfileRepository.findByProductCategoryId(productCategoryId), HttpStatus.OK); 
+		} catch (Exception e) {
+			return new ResponseEntity<List<ProductCategoryFileMetaData>>(HttpStatus.NOT_FOUND);
+		}
+	}
 	
 	@GetMapping("/fileservice/v1.0/category/{id}")
     public ResponseEntity<FileMetaData> getFileMetaDataById(
@@ -89,8 +104,19 @@ public class FileController {
 			@PathVariable("id") long id,
 			@PathVariable("urlId") Integer urlTypeId,
 			@PathVariable("action") String action) {
-		this.fileService.uploadFile(file,productCode,id,urlTypeId,action);
 		return new ResponseEntity<FileUploadResponse>(new FileUploadResponse(fileService.uploadFile(file,productCode,id,urlTypeId,action)), HttpStatus.OK); 
+    }
+	
+	@PostMapping({ "/fileservice/v1.0/add/{productCategoryId}/{id}/{urlId}/{action}" })
+	@ApiOperation("Uploads Product Category files to S3 bucket.")
+	public ResponseEntity<ProductCategoryFileUploadResponse> uploadProductCategoryFile(
+			@RequestPart(value = "file") MultipartFile file,
+			@PathVariable("productCategoryId") long productCategoryId,
+			@PathVariable("id") long id,
+			@PathVariable("urlId") Integer urlTypeId,
+			@PathVariable("action") String action) {
+		return new ResponseEntity<ProductCategoryFileUploadResponse>(new ProductCategoryFileUploadResponse(fileService.uploadCategoryFileMetaData
+				(file,productCategoryId,id,urlTypeId,action)), HttpStatus.OK); 
     }
 
 	@DeleteMapping("/fileservice/v1.0")

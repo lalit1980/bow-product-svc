@@ -12,6 +12,7 @@ import com.boozeonwheel.product.domain.category.ProductCategory;
 import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.dto.master.MasterDTO;
+import com.boozeonwheel.product.exception.category.CategoryNotFoundException;
 import com.boozeonwheel.product.repository.category.ProductCategoryRepository;
 import com.boozeonwheel.product.repository.file.FileRepository;
 import com.boozeonwheel.product.repository.liquor.LiquorRepository;
@@ -74,9 +75,9 @@ public class ProductMasterBL {
 					}
 					
 					System.out.println("Sku Code: "+master.getSku()+" Find by Category Id: "+master.getCategoryId());
-					List<ProductCategory> list=productCategoryRepository.findById(master.getCategoryId());
-					if(!CollectionUtils.isNullOrEmpty(list) ) {
-						dto.setCategoryName(productCategoryRepository.findById(master.getCategoryId()).get(0).getCategoryName());
+					ProductCategory list=productCategoryRepository.findByCategory(master.getCategoryId());
+					if(list!=null ) {
+						dto.setCategoryName(productCategoryRepository.findByCategory(master.getCategoryId()).getCategoryName());
 					}
 					dto.setId(master.getId());
 					dto.setDisplayPrice(master.getDisplayPrice());
@@ -117,8 +118,14 @@ public class ProductMasterBL {
 		if((master!=null)) {
 				dto=new MasterDTO();
 				dto.setCategoryId(master.getCategoryId());
-				ProductCategory category=productCategoryRepository.findById(master.getCategoryId()).get(0);
-				dto.setCategoryName(category.getCategoryName());
+				ProductCategory category=null;
+				try {
+					category = productCategoryRepository.findByCategory(master.getCategoryId());
+					dto.setCategoryName(category.getCategoryName());
+				} catch (CategoryNotFoundException e) {
+					e.printStackTrace();
+				}
+				
 				dto.setDepth(master.getDepth());
 				dto.setDescription(master.getDescription());
 				dto.setDisplayPrice(master.getDisplayPrice());

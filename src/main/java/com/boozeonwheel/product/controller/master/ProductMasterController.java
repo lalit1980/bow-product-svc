@@ -67,15 +67,6 @@ public class ProductMasterController {
 			return new ResponseEntity<List<MasterDTO>>(HttpStatus.NOT_FOUND);
 		}
 	}
-	@GetMapping("/v1/master/")
-	@ApiOperation("Returns a specific Master Product by Category Type by their identifier. 404 if does not exist.")
-	public ResponseEntity<List<CategoryDTO>> getDistinctCategory() {
-		try {
-			return new ResponseEntity<List<CategoryDTO>>(productCategoryBL.findAllProductCategory(), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<List<CategoryDTO>>(HttpStatus.NOT_FOUND);
-		}
-	}
 	
 	@GetMapping("/v1/master/category/product/{id}")
 	@ApiOperation("Returns a specific Master Product by Category Type by their identifier. 404 if does not exist.")

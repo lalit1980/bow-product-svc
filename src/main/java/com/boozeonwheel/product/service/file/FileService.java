@@ -43,10 +43,12 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.util.CollectionUtils;
 import com.boozeonwheel.product.client.DataDTO;
 import com.boozeonwheel.product.domain.file.FileMetaData;
+import com.boozeonwheel.product.domain.file.ProductCategoryFileMetaData;
 import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.domain.url.UrlType;
 import com.boozeonwheel.product.exception.file.DataCorruptedException;
 import com.boozeonwheel.product.repository.file.FileRepository;
+import com.boozeonwheel.product.repository.file.ProductCategoryFileRepository;
 import com.boozeonwheel.product.repository.master.ProductMasterRepository;
 import com.boozeonwheel.product.repository.url.UrlTypeRepository;
 
@@ -69,6 +71,9 @@ public class FileService {
 
 	@Autowired
 	FileRepository fileRepository;
+	
+	@Autowired
+	ProductCategoryFileRepository productCategoryFileRepository;
 
 	@Autowired
 	UrlTypeRepository urlTypeRepo;
@@ -86,6 +91,98 @@ public class FileService {
 	private void initializeAmazon() {
 		AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
 		this.s3client = new AmazonS3Client(credentials);
+	}
+	
+	public String uploadCategoryFileMetaData(MultipartFile multipartFile, long categoryId, Long id, Integer urlTypeId, String action) {
+		File file = null;
+		String fileUrl = null;
+		try {
+			file = convertMultiPartToFile(multipartFile);
+			if (action.equalsIgnoreCase("edit")) {
+				List<ProductCategoryFileMetaData> fileDataList = productCategoryFileRepository.findByFileId(id);
+				if(!CollectionUtils.isNullOrEmpty(fileDataList) ) {
+					for (ProductCategoryFileMetaData fileData : fileDataList) {
+						deleteFileFromS3Bucket(fileData.getS3Path());
+						String fileName = generateProductCategoryFileName(multipartFile);
+						fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+						uploadFileTos3bucket(fileName, file);
+						ProductCategoryFileMetaData fileMetaData = new ProductCategoryFileMetaData();
+						String location = getTargetFileLocation(fileName);
+						fileMetaData.setId(fileData.getId());
+						fileMetaData.setFileName(fileName);
+						fileMetaData.setContentSize(multipartFile.getSize());
+						fileMetaData.setContentType(multipartFile.getContentType());
+						if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")
+								|| multipartFile.getContentType().equalsIgnoreCase("image/png")) {
+							BufferedImage bimg = ImageIO.read(file);
+							fileMetaData.setAttachmentHeight(bimg.getHeight());
+							fileMetaData.setAttachmentWidth(bimg.getWidth());
+							fileMetaData.setType("Spree::"+multipartFile.getContentType());
+							fileMetaData.setViewableType("Spree::Category");
+						}
+						fileMetaData.setViewableId(0);
+						UrlType urlType = urlTypeRepo.findByUrlId(urlTypeId);
+						fileMetaData.setUrlTypeId(urlTypeId);
+						fileMetaData.setUrlType(urlType.getUrlType());
+						fileMetaData.setAlt(fileName);
+						fileMetaData.setPosition(1);
+						fileMetaData.setLocation(location);
+						fileMetaData.setS3Path(fileUrl);
+						fileMetaData.setAttachmentUpdatedAt(new Date());
+						fileMetaData.setProductCategoryId(categoryId);
+						
+						UUID uuid = UUID.randomUUID();
+						String randomUUIDString = uuid.toString();
+						fileMetaData.setFileId(randomUUIDString);
+						productCategoryFileRepository.updateFileMetaData(fileMetaData, id);
+						storageProvider.store(fileName, extractContent(multipartFile));
+						
+					}
+					
+				}
+			}else if(action.equalsIgnoreCase("add")) {
+				long generatedId = fileSeqGen.generateSequence(ProductCategoryFileMetaData.SEQUENCE_NAME);
+				
+				String fileName = generateProductCategoryFileName(multipartFile);
+				fileUrl = endpointUrl + "/" + bucketName + "/" + fileName;
+				uploadFileTos3bucket(fileName, file);
+				ProductCategoryFileMetaData fileMetaData = new ProductCategoryFileMetaData();
+				String location = getTargetFileLocation(fileName);
+				fileMetaData.setId(generatedId);
+				fileMetaData.setFileName(fileName);
+				fileMetaData.setContentSize(multipartFile.getSize());
+				fileMetaData.setContentType(multipartFile.getContentType());
+				if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")
+						|| multipartFile.getContentType().equalsIgnoreCase("image/png")) {
+					BufferedImage bimg = ImageIO.read(file);
+					fileMetaData.setAttachmentHeight(bimg.getHeight());
+					fileMetaData.setAttachmentWidth(bimg.getWidth());
+					fileMetaData.setType("Spree::"+multipartFile.getContentType());
+					fileMetaData.setViewableType("Spree::Category");
+				}
+				fileMetaData.setViewableId(0);
+				UrlType urlType = urlTypeRepo.findByUrlId(urlTypeId);
+				fileMetaData.setUrlTypeId(urlTypeId);
+				fileMetaData.setUrlType(urlType.getUrlType());
+				fileMetaData.setAlt(fileName);
+				fileMetaData.setPosition(1);
+				fileMetaData.setLocation(location);
+				fileMetaData.setS3Path(fileUrl);
+				fileMetaData.setAttachmentUpdatedAt(new Date());
+				
+				UUID uuid = UUID.randomUUID();
+				String randomUUIDString = uuid.toString();
+				fileMetaData.setFileId(randomUUIDString);
+				fileMetaData.setProductCategoryId(categoryId);
+				productCategoryFileRepository.save(fileMetaData);
+				storageProvider.store(fileName, extractContent(multipartFile));
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return fileUrl;
+		
 	}
 
 	public String uploadFile(MultipartFile multipartFile, Long productCode, Long id, Integer urlTypeId, String action) {
@@ -160,11 +257,11 @@ public class FileService {
 						fileMetaData.setContentSize(multipartFile.getSize());
 						fileMetaData.setContentType(multipartFile.getContentType());
 						if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")
-								|| multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
+								|| multipartFile.getContentType().equalsIgnoreCase("image/png")) {
 							BufferedImage bimg = ImageIO.read(file);
 							fileMetaData.setAttachmentHeight(bimg.getHeight());
 							fileMetaData.setAttachmentWidth(bimg.getWidth());
-							fileMetaData.setType("Spree::Image");
+							fileMetaData.setType("Spree::"+multipartFile.getContentType());
 						}
 						fileMetaData.setViewableId(productCode != null ? productCode.intValue() : null);
 						
@@ -206,11 +303,11 @@ public class FileService {
 					fileMetaData.setContentSize(multipartFile.getSize());
 					fileMetaData.setContentType(multipartFile.getContentType());
 					if (multipartFile.getContentType().equalsIgnoreCase("image/jpeg")
-							|| multipartFile.getContentType().equalsIgnoreCase("image/jpeg")) {
+							|| multipartFile.getContentType().equalsIgnoreCase("image/png")) {
 						BufferedImage bimg = ImageIO.read(file);
 						fileMetaData.setAttachmentHeight(bimg.getHeight());
 						fileMetaData.setAttachmentWidth(bimg.getWidth());
-						fileMetaData.setType("Spree::Image");
+						fileMetaData.setType("Spree::"+multipartFile.getContentType());
 					}
 					fileMetaData.setViewableId(productCode != null ? productCode.intValue() : null);
 					
@@ -263,6 +360,10 @@ public class FileService {
 			fileName=productCode + "-" + id + "-" + urlType + "-" + new Date().getTime() + "-" +multiPart.getOriginalFilename().replace(" ", "_");
 		}
 		return fileName;
+	}
+	
+	private String generateProductCategoryFileName(MultipartFile multiPart) {
+		return new Date().getTime() + "-" + multiPart.getOriginalFilename().replace(" ", "_");
 	}
 
 	private void uploadFileTos3bucket(String fileName, File file) {
@@ -393,6 +494,7 @@ public class FileService {
 				master.setTotalOnHand(100);
 				master.setTrackInventory(true);
 				master.setWeight("0.0");
+				master.setIsDestroyed(false);
 				System.out.println(master.toString());
 				masterList.add(master);
 			});

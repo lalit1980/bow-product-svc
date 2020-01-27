@@ -33,7 +33,7 @@ public class BoozeOnWheelApplication {
 	public Docket swaggerProductCategoryApi10() {
 		return new Docket(DocumentationType.SWAGGER_2).groupName("Product-Category-API-1.0").select()
 				.apis(RequestHandlerSelectors.basePackage("com.boozeonwheel.product.controller.category"))
-				.paths(regex("/api/productcategorytype/v1.0.*")).build()
+				.paths(regex("/api/productcategory/v1.0.*")).build()
 				.apiInfo(new ApiInfoBuilder().version("1.0").title("BoozeOnWheel Product Category API")
 						.description("Documentation BoozeOnWheel Product Category API v1.0").build());
 	}
