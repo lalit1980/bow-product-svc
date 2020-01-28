@@ -46,9 +46,16 @@ public class ProductCategoryRepositoryImpl implements ProductCategoryRespository
 
 	@Override
 	public List<ProductCategory> findByParentId(long parentCategoryId) {
+		List<ProductCategory> dataList=null;
 		Query query = new Query(Criteria.where("parentCategoryId").is(parentCategoryId));
 		//query.with(new Sort(Sort.Direction.ASC, "id"));
-		return mongoTemplate.find(query, ProductCategory.class);
+		try {
+			dataList=mongoTemplate.find(query, ProductCategory.class);
+		} catch (Exception e) {
+			return dataList;
+		}
+		
+		return dataList;
 
 	}
 

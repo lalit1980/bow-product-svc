@@ -1,5 +1,8 @@
 package com.boozeonwheel.product.domain.category;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.IndexDirection;
@@ -21,10 +24,10 @@ public class ProductCategory {
 	
 	@Id
 	@Indexed(name = "id_index", direction = IndexDirection.ASCENDING)
-	private long id;
+	private Long id;
 	
 	@ApiModelProperty(notes = "Unique identifier of the product parent category. No two persons can have the same id.", example = "1", required = true, position = 0)
-	private long parentCategoryId;
+	private Long parentCategoryId;
 	private String categoryName;
 	private String prettyName;
 	private String permalink;
@@ -34,10 +37,23 @@ public class ProductCategory {
 	private String description;
 	private Boolean isMasterCategory;
 	private Boolean isMasterSubCategory;
-	public long getId() {
+	private ProductCategory parentCategory;
+	private List<ProductCategory> subcategories;
+	public ProductCategory() {
+        super();
+        this.subcategories = new ArrayList<ProductCategory>();
+    }
+	public ProductCategory(Long childId, Long parentId) {
+        this.id = childId;
+        this.parentCategoryId = parentId;
+        this.subcategories = new ArrayList<ProductCategory>();
+    }
+	
+	
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	
@@ -96,17 +112,32 @@ public class ProductCategory {
 	public void setIsMasterSubCategory(Boolean isMasterSubCategory) {
 		this.isMasterSubCategory = isMasterSubCategory;
 	}
-	public long getParentCategoryId() {
+	public Long getParentCategoryId() {
 		return parentCategoryId;
 	}
-	public void setParentCategoryId(long parentCategoryId) {
+	public void setParentCategoryId(Long parentCategoryId) {
 		this.parentCategoryId = parentCategoryId;
 	}
-	@Override
-	public String toString() {
-		return "ProductCategory [id=" + id + ", parentCategoryId=" + parentCategoryId + ", categoryName=" + categoryName
-				+ ", prettyName=" + prettyName + ", permalink=" + permalink + ", taxonomyId=" + taxonomyId
-				+ ", metaTitle=" + metaTitle + ", metaDescription=" + metaDescription + ", description=" + description
-				+ ", isMasterCategory=" + isMasterCategory + ", isMasterSubCategory=" + isMasterSubCategory + "]";
+	
+	public ProductCategory getParentCategory() {
+		return parentCategory;
 	}
+	public void setParentCategory(ProductCategory parentCategory) {
+		this.parentCategory = parentCategory;
+	}
+	public List<ProductCategory> getSubcategories() {
+		return subcategories;
+	}
+	public void setSubcategories(List<ProductCategory> subcategories) {
+		this.subcategories = subcategories;
+	}
+	public void addSubCategories(ProductCategory child) {
+        if (!this.subcategories.contains(child) && child != null)
+            this.subcategories.add(child);
+    }
+	@Override
+    public String toString() {
+        return "Node [id=" + id + ", parentId=" + parentCategoryId + ", value=" + categoryName + ", children="
+                + subcategories + "]";
+    }
 }

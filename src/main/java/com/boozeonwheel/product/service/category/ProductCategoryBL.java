@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -13,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.services.directconnect.model.Loa;
 import com.boozeonwheel.product.domain.category.ProductCategory;
 import com.boozeonwheel.product.domain.file.ProductCategoryFileMetaData;
 import com.boozeonwheel.product.dto.master.CategoryDTO;
@@ -78,7 +81,7 @@ public class ProductCategoryBL {
 					List<Taxon> listTaxon = new ArrayList<Taxon>();
 					for (ProductCategory taxonListObj : rootTaxonList) {
 						Taxon taxon = new Taxon();
-						taxon=getProductCategoryFileMetaDataBByCategoryId(taxonListObj.getId(), taxon);
+						taxon = getProductCategoryFileMetaDataBByCategoryId(taxonListObj.getId(), taxon);
 						taxon.setId(taxonListObj.getId());
 						taxon.setDescription(taxonListObj.getDescription());
 						taxon.setMetaDescription(taxonListObj.getMetaDescription());
@@ -94,7 +97,7 @@ public class ProductCategoryBL {
 							List<Taxon> listTaxonFinal = new ArrayList<Taxon>();
 							for (ProductCategory taxonObj : taxonList) {
 								Taxon taxonData = new Taxon();
-								taxonData=getProductCategoryFileMetaDataBByCategoryId(taxonData.getId(), taxon);
+								taxonData = getProductCategoryFileMetaDataBByCategoryId(taxonData.getId(), taxon);
 								taxonData.setId(taxonObj.getId());
 								taxonData.setDescription(taxonObj.getDescription());
 								taxonData.setMetaDescription(taxonObj.getMetaDescription());
@@ -110,7 +113,8 @@ public class ProductCategoryBL {
 									List<Taxon> listTaxonFinalDepth = new ArrayList<Taxon>();
 									for (ProductCategory taxonObjFinal : taxonListFinal) {
 										Taxon taxonDataFinal = new Taxon();
-										taxonDataFinal=getProductCategoryFileMetaDataBByCategoryId(taxonObjFinal.getId(), taxon);
+										taxonDataFinal = getProductCategoryFileMetaDataBByCategoryId(
+												taxonObjFinal.getId(), taxon);
 										taxonDataFinal.setId(taxonObjFinal.getId());
 										taxonDataFinal.setDescription(taxonObjFinal.getDescription());
 										taxonDataFinal.setMetaDescription(taxonObjFinal.getMetaDescription());
@@ -161,7 +165,7 @@ public class ProductCategoryBL {
 					List<Taxon> listTaxon = new ArrayList<Taxon>();
 					for (ProductCategory taxonListObj : rootTaxonList) {
 						Taxon taxon = new Taxon();
-						taxon=getProductCategoryFileMetaDataBByCategoryId(categoryId, taxon);
+						taxon = getProductCategoryFileMetaDataBByCategoryId(categoryId, taxon);
 						taxon.setId(taxonListObj.getId());
 						taxon.setDescription(taxonListObj.getDescription());
 						taxon.setMetaDescription(taxonListObj.getMetaDescription());
@@ -185,7 +189,7 @@ public class ProductCategoryBL {
 	public Root getProductSubCategoryByParentIdAndCategoryId(int parentId, int id) {
 
 		Root root = new Root();
-		ProductCategory productCategory=null;
+		ProductCategory productCategory = null;
 		try {
 			productCategory = productCategoryRepository.findByCategory(id);
 		} catch (CategoryNotFoundException e) {
@@ -206,7 +210,7 @@ public class ProductCategoryBL {
 				List<Taxon> listTaxon = new ArrayList<Taxon>();
 				for (ProductCategory taxonListObj : rootTaxonList) {
 					Taxon taxon = new Taxon();
-					taxon=getProductCategoryFileMetaDataBByCategoryId(id, taxon);
+					taxon = getProductCategoryFileMetaDataBByCategoryId(id, taxon);
 					taxon.setId(taxonListObj.getId());
 					taxon.setDescription(taxonListObj.getDescription());
 					taxon.setMetaDescription(taxonListObj.getMetaDescription());
@@ -224,26 +228,31 @@ public class ProductCategoryBL {
 
 		return root;
 	}
-	public Taxon getProductCategoryFileMetaDataBByCategoryId(long productCategoryId,Taxon taxon) {
-		List<ProductCategoryFileMetaData> prodCatFileList=productCategoryFileRepository.findByProductCategoryId(productCategoryId);
-		if(prodCatFileList!=null && prodCatFileList.size()>0) {
+
+	public Taxon getProductCategoryFileMetaDataBByCategoryId(long productCategoryId, Taxon taxon) {
+		List<ProductCategoryFileMetaData> prodCatFileList = productCategoryFileRepository
+				.findByProductCategoryId(productCategoryId);
+		if (prodCatFileList != null && prodCatFileList.size() > 0) {
 			for (ProductCategoryFileMetaData productCategoryFileMetaData : prodCatFileList) {
-				if(productCategoryFileMetaData!=null && productCategoryFileMetaData.getUrlTypeId()==5) {
+				if (productCategoryFileMetaData != null && productCategoryFileMetaData.getUrlTypeId() == 5) {
 					taxon.setBannerImage(productCategoryFileMetaData.getS3Path());
-				}else if(productCategoryFileMetaData!=null && productCategoryFileMetaData.getUrlTypeId()==6) {
+				} else if (productCategoryFileMetaData != null && productCategoryFileMetaData.getUrlTypeId() == 6) {
 					taxon.setIcon(productCategoryFileMetaData.getS3Path());
 				}
 			}
 		}
 		return taxon;
 	}
+
 	public List<CategoryDTO> findAllProductCategory() {
 		List<ProductCategory> productCategoryList = productCategoryRepository.findAll();
 		List<CategoryDTO> categoryList = new ArrayList<CategoryDTO>();
 		if (productCategoryList != null && productCategoryList.size() > 0) {
 			for (ProductCategory productCategory : productCategoryList) {
-				if (productCategory != null /*&& !productCategory.getIsMasterCategory()
-						&& !productCategory.getIsMasterSubCategory()*/) {
+				if (productCategory != null /*
+											 * && !productCategory.getIsMasterCategory() &&
+											 * !productCategory.getIsMasterSubCategory()
+											 */) {
 					CategoryDTO dto = new CategoryDTO();
 					dto.setCategoryId(productCategory.getId());
 					dto.setCategoryName(productCategory.getCategoryName());
@@ -253,39 +262,167 @@ public class ProductCategoryBL {
 		}
 		return categoryList;
 	}
-	
+
 	public ProductCategory saveProductCategory(ProductCategory productCategory) {
-		if(productCategory !=null) {
-			if(productCategory.getIsMasterCategory() && productCategory.getIsMasterSubCategory()) {
-				productCategory.setPrettyName(productCategory.getCategoryName());
-				productCategory.setPermalink(productCategory.getCategoryName().replaceAll(" ", "_").toLowerCase());
-			}else if(!productCategory.getIsMasterCategory() && !productCategory.getIsMasterSubCategory()) {
-				//Optional<ProductCategory> productCategoryList=productCategoryRepository.findById(productCategory.getId());
-				List<Optional<ProductCategory>> listOfOptionals = Arrays.asList(productCategoryRepository.findById(productCategory.getParentCategoryId()));
-				List<ProductCategory> productCategoryList = listOfOptionals.stream()
-						  .filter(Optional::isPresent)
-						  .map(Optional::get)
-						  .collect(Collectors.toList());
-				List<String> categoryNames=new ArrayList<String>();
-				for (ProductCategory productCategory2 : productCategoryList) {
-					categoryNames.add(productCategory2.getCategoryName());
+		ProductCategory cat=new ProductCategory();
+		if (productCategory != null) {
+			List<ProductCategory> allList=productCategoryRepository.findAll();
+			if(allList!=null && allList.size()>0) {
+				ProductCategory newCategory=new ProductCategory(productCategory.getId(), productCategory.getParentCategoryId());
+				newCategory.setPrettyName(productCategory.getCategoryName());
+				newCategory.setPermalink(productCategory.getCategoryName().replaceAll(" ", "_").toLowerCase());
+				newCategory.setCategoryName(productCategory.getCategoryName());
+				newCategory.setDescription(productCategory.getDescription());
+				newCategory.setMetaDescription(productCategory.getMetaDescription());
+				newCategory.setMetaTitle(productCategory.getMetaTitle());
+				newCategory.setTaxonomyId(productCategory.getTaxonomyId());
+				
+				allList.add(newCategory);
+				ProductCategory category=createTree(allList);
+				cat=productCategoryRepository.save(category);
+				
+			}else {
+				allList=new ArrayList<>();
+				ProductCategory newCategory=new ProductCategory(productCategory.getId(), new Long(0));
+				newCategory.setPrettyName(productCategory.getCategoryName());
+				newCategory.setPermalink(productCategory.getCategoryName().replaceAll(" ", "_").toLowerCase());
+				newCategory.setCategoryName(productCategory.getCategoryName());
+				newCategory.setDescription(productCategory.getDescription());
+				newCategory.setMetaDescription(productCategory.getMetaDescription());
+				newCategory.setMetaTitle(productCategory.getMetaTitle());
+				newCategory.setTaxonomyId(productCategory.getTaxonomyId());
+				//newCategory.setParentCategory(newCategory);
+				allList.add(newCategory);
+				ProductCategory category=createTree(allList);
+				if(category!=null && category.getSubcategories()!=null && category.getSubcategories().size()>0) {
+					List<ProductCategory> newList=category.getSubcategories();
+					for (ProductCategory productCategory2 : newList) {
+						
+					}
 				}
-				categoryNames.add(productCategory.getCategoryName());
-				productCategory.setPrettyName(getPreetyName(categoryNames));
-				productCategory.setPermalink(getPermaLink(categoryNames));
+				cat=productCategoryRepository.save(category);
+				
 			}
+			
+			
+			
 		}
-		return productCategoryRepository.save(productCategory);
-		
+		return cat;
+
 	}
+	 private static ProductCategory createTree(List<ProductCategory> nodes) {
+		 
+	        Map<Long, ProductCategory> mapTmp = new HashMap<Long, ProductCategory>();
+	        
+	        //Save all nodes to a map
+	        for (ProductCategory current : nodes) {
+	            mapTmp.put(current.getId(), current);
+	        }
+	 
+	        //loop and assign parent/child relationships
+	        for (ProductCategory current : nodes) {
+	            Long parentId = current.getParentCategoryId();
+	 
+	            if (parentId != null) {
+	            	ProductCategory parent = mapTmp.get(parentId);
+	                if (parent != null) {
+	                	current.setParentCategory(parent);
+	                    //current.setParent(parent);
+	                    parent.addSubCategories(current);
+	                    mapTmp.put(parentId, parent);
+	                    mapTmp.put(current.getId(), current);
+	                }
+	            }
+	 
+	        }
+	 
+	    
+	        //get the root
+	        ProductCategory root = null;
+	        for (ProductCategory node : mapTmp.values()) {
+	            if(node.getParentCategory() == null) {
+	                root = node;
+	                break;
+	            }
+	        }
+	 
+	        System.out.println(root);
+	        return root;
+	    }
 	private static String getPreetyName(List<String> str) {
-		return str.stream()
-                .collect(Collectors.joining(" -> "));
+		return str.stream().collect(Collectors.joining(" -> "));
 	}
-	
+
 	private static String getPermaLink(List<String> nameList) {
-		
-		return nameList.stream()
-                .collect(Collectors.joining("/")).replaceAll(" ", "_").toLowerCase();
+
+		return nameList.stream().collect(Collectors.joining("/")).replaceAll(" ", "_").toLowerCase();
 	}
+	/*
+	public static ProductCategory saveProductCategoryNew(ProductCategory productCategory, List<ProductCategory> productCategoryList) {
+		List<String> categoryNames=new ArrayList<String>();
+		//List<ProductCategory> productCategoryList=productCategoryRepository.findAll();
+		List<ProductCategory> level1=new ArrayList<>();
+		if(productCategoryList!=null && productCategoryList.size()>0) {
+			
+			for(int i=0;i<productCategoryList.size();i++) {
+				ProductCategory allProdCat=productCategoryList.get(i);
+				if(productCategory.getParentCategoryId()==allProdCat.getId()) {
+					categoryNames.add(allProdCat.getCategoryName());
+					level1.add(allProdCat);
+					
+				}
+			}
+			categoryNames.add(productCategory.getCategoryName());
+			
+		}
+		System.out.println("Preety Name: "+getPreetyName(categoryNames));
+		System.out.println("Perma link: "+getPermaLink(categoryNames));
+		return productCategory;
+	}
+
+	public static void main(String[] args) {
+		List<ProductCategory> list = new ArrayList<ProductCategory>();
+		ProductCategory obj1 = new ProductCategory();
+		obj1.setCategoryName("Master Category");
+		obj1.setId(new Long(1));
+		obj1.setParentCategoryId(null);
+		
+		ProductCategory obj2 = new ProductCategory();
+		obj2.setCategoryName("Wood Craft");
+		obj2.setId(new Long(6));
+		obj2.setParentCategoryId(null);
+		 //
+		 
+		ProductCategory obj3 = new ProductCategory();
+		obj3.setCategoryName("Alcohol");
+		obj3.setId(new Long(2));
+		obj3.setParentCategoryId(new Long(1));
+		obj3.setPrettyName(obj3.getCategoryName());
+		obj3.setPermalink("alcohol");
+
+		ProductCategory obj4 = new ProductCategory();
+		obj4.setCategoryName("Beer");
+		obj4.setId(new Long(3));
+		obj4.setParentCategoryId(new Long(2));
+
+		ProductCategory obj5 = new ProductCategory();
+		obj5.setCategoryName("Domestic Beer");
+		obj5.setId(new Long(4));
+		obj5.setParentCategoryId(new Long(3));
+
+		ProductCategory obj6 = new ProductCategory();
+		obj6.setCategoryName("Imported Beer");
+		obj6.setId(new Long(5));
+		obj6.setParentCategoryId(new Long(3));
+		list.add(obj1);
+		//list.add(obj2);
+		//list.add(obj3);
+		//list.add(obj4);
+		//list.add(obj5);
+
+		
+		//saveProductCategoryNew(obj6, list);
+		createTree(list);
+
+	}*/
 }
