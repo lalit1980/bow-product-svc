@@ -12,6 +12,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
     "id",
@@ -27,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public class Taxon {
 
     @JsonProperty("id")
-    private Integer id;
+    private Long id;
     @JsonProperty("name")
     private String name;
     @JsonProperty("pretty_name")
@@ -35,9 +40,9 @@ public class Taxon {
     @JsonProperty("permalink")
     private String permalink;
     @JsonProperty("parent_id")
-    private Integer parentId;
+    private Long parentId;
     @JsonProperty("taxonomy_id")
-    private Integer taxonomyId;
+    private Long taxonomyId;
     @JsonProperty("meta_title")
     private String metaTitle;
     @JsonProperty("meta_description")
@@ -45,140 +50,6 @@ public class Taxon {
     @JsonProperty("taxons")
     private List<Taxon> taxons = new ArrayList<Taxon>();
 
-    @JsonProperty("id")
-    public Integer getId() {
-        return id;
-    }
-
-    @JsonProperty("id")
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Taxon withId(Integer id) {
-        this.id = id;
-        return this;
-    }
-
-    @JsonProperty("name")
-    public String getName() {
-        return name;
-    }
-
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Taxon withName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @JsonProperty("pretty_name")
-    public String getPrettyName() {
-        return prettyName;
-    }
-
-    @JsonProperty("pretty_name")
-    public void setPrettyName(String prettyName) {
-        this.prettyName = prettyName;
-    }
-
-    public Taxon withPrettyName(String prettyName) {
-        this.prettyName = prettyName;
-        return this;
-    }
-
-    @JsonProperty("permalink")
-    public String getPermalink() {
-        return permalink;
-    }
-
-    @JsonProperty("permalink")
-    public void setPermalink(String permalink) {
-        this.permalink = permalink;
-    }
-
-    public Taxon withPermalink(String permalink) {
-        this.permalink = permalink;
-        return this;
-    }
-
-    @JsonProperty("parent_id")
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    @JsonProperty("parent_id")
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
-    }
-
-    public Taxon withParentId(Integer parentId) {
-        this.parentId = parentId;
-        return this;
-    }
-
-    @JsonProperty("taxonomy_id")
-    public Integer getTaxonomyId() {
-        return taxonomyId;
-    }
-
-    @JsonProperty("taxonomy_id")
-    public void setTaxonomyId(Integer taxonomyId) {
-        this.taxonomyId = taxonomyId;
-    }
-
-    public Taxon withTaxonomyId(Integer taxonomyId) {
-        this.taxonomyId = taxonomyId;
-        return this;
-    }
-
-    @JsonProperty("meta_title")
-    public String getMetaTitle() {
-        return metaTitle;
-    }
-
-    @JsonProperty("meta_title")
-    public void setMetaTitle(String metaTitle) {
-        this.metaTitle = metaTitle;
-    }
-
-    public Taxon withMetaTitle(String metaTitle) {
-        this.metaTitle = metaTitle;
-        return this;
-    }
-
-    @JsonProperty("meta_description")
-    public String getMetaDescription() {
-        return metaDescription;
-    }
-
-    @JsonProperty("meta_description")
-    public void setMetaDescription(String metaDescription) {
-        this.metaDescription = metaDescription;
-    }
-
-    public Taxon withMetaDescription(String metaDescription) {
-        this.metaDescription = metaDescription;
-        return this;
-    }
-
-    @JsonProperty("taxons")
-    public List<Taxon> getTaxons() {
-        return taxons;
-    }
-
-    @JsonProperty("taxons")
-    public void setTaxons(List<Taxon> taxons) {
-        this.taxons = taxons;
-    }
-
-    public Taxon withTaxons(List<Taxon> taxons) {
-        this.taxons = taxons;
-        return this;
-    }
 
     @Override
     public String toString() {

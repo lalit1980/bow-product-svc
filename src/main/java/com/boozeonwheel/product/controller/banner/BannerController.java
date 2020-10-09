@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.boozeonwheel.product.dto.root.Root;
 import com.boozeonwheel.product.dto.taxonomies.HomeResult;
-import com.boozeonwheel.product.service.category.ProductCategoryBL;
+import com.boozeonwheel.product.service.category.IProductCategoryService;
+import com.boozeonwheel.product.service.category.ProductCategoryServiceImpl;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,7 +22,7 @@ import io.swagger.annotations.ApiOperation;
 @Api(description = "Set of endpoints for Creating, Retrieving, Updating and Deleting Banners")
 public class BannerController {
 	@Autowired
-	ProductCategoryBL productCategoryBL;
+	ProductCategoryServiceImpl productCategoryBL;
 	
 	@GetMapping("/v1/taxonomies")
 	@ApiOperation("Returns a specific Product Category Type by their identifier. 404 if does not exist.")

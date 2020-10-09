@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.boozeonwheel.product.domain.category.ProductCategory;
 import com.boozeonwheel.product.dto.master.CategoryDTO;
-import com.boozeonwheel.product.exception.category.CategoryNotFoundException;
+import com.boozeonwheel.product.exception.file.NotFoundException;
 import com.boozeonwheel.product.repository.category.ProductCategoryRepository;
-import com.boozeonwheel.product.service.category.ProductCategoryBL;
+import com.boozeonwheel.product.service.category.ProductCategoryServiceImpl;
 import com.boozeonwheel.product.service.file.FileSequenceGeneratorService;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -36,14 +36,14 @@ public class ProductCategoryController {
 	@Autowired
 	FileSequenceGeneratorService fileSeq;
 	@Autowired
-	ProductCategoryBL productCategoryBL;
+	ProductCategoryServiceImpl productCategoryBL;
 	
 	@GetMapping("/productcategory/v1.0/{id}")
 	@ApiOperation("Returns a specific Product Category Type by their identifier. 404 if does not exist.")
 	public ResponseEntity<ProductCategory> findById(@PathVariable("id") long id) {
 		try {
 			return new ResponseEntity<ProductCategory>(productCategoryRepository.findByCategory(id), HttpStatus.OK);
-		} catch (CategoryNotFoundException e) {
+		} catch (NotFoundException e) {
 			return new ResponseEntity<ProductCategory>(HttpStatus.NO_CONTENT);
 		}
 	}
@@ -61,7 +61,7 @@ public class ProductCategoryController {
 	@GetMapping("/productcategory/v1.0/master/parentCategoryId/{parentCategoryId}")
 	@ApiOperation("Returns a specific Parent Category ID. 404 if does not exist.")
 	public List<ProductCategory> getByParentId(@PathVariable("parentCategoryId") long parentCategoryId) {
-		return productCategoryRepository.findByParentId(parentCategoryId);
+		return productCategoryRepository.findByParentCategoryId(parentCategoryId);
 	}
 	
 
@@ -69,7 +69,7 @@ public class ProductCategoryController {
 	@ApiOperation("Creates a new product category type.")
 	public ResponseEntity<ProductCategory> add(@RequestBody ProductCategory productCategory) {
 		try {
-			productCategory.setId(fileSeq.generateSequence(ProductCategory.SEQUENCE_NAME));
+			
 			return new ResponseEntity<ProductCategory>(productCategoryBL.saveProductCategory(productCategory), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<ProductCategory>(HttpStatus.NOT_FOUND);

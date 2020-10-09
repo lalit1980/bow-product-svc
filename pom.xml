@@ -146,6 +146,12 @@
 			<artifactId>poi</artifactId>
 			<version>4.1.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.javers/javers-core -->
+		<dependency>
+			<groupId>org.javers</groupId>
+			<artifactId>javers-core</artifactId>
+			<version>5.8.9</version>
+		</dependency>
 
 	</dependencies>
 	<build>

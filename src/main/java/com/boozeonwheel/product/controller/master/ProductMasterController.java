@@ -19,7 +19,7 @@ import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.dto.master.CategoryDTO;
 import com.boozeonwheel.product.dto.master.MasterDTO;
 import com.boozeonwheel.product.repository.master.ProductMasterRepository;
-import com.boozeonwheel.product.service.category.ProductCategoryBL;
+import com.boozeonwheel.product.service.category.ProductCategoryServiceImpl;
 import com.boozeonwheel.product.service.file.FileSequenceGeneratorService;
 import com.boozeonwheel.product.service.master.ProductMasterBL;
 import com.mongodb.client.result.DeleteResult;
@@ -41,7 +41,7 @@ public class ProductMasterController {
 	ProductMasterBL productMasterBL;
 	
 	@Autowired
-	ProductCategoryBL productCategoryBL;
+	ProductCategoryServiceImpl productCategoryBL;
 	
 	@Autowired
 	FileSequenceGeneratorService fileSeqGen;

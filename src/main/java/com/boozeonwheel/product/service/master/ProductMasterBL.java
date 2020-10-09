@@ -13,6 +13,7 @@ import com.boozeonwheel.product.domain.liquor.M_LIQUOR;
 import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.dto.master.MasterDTO;
 import com.boozeonwheel.product.exception.category.CategoryNotFoundException;
+import com.boozeonwheel.product.exception.file.NotFoundException;
 import com.boozeonwheel.product.repository.category.ProductCategoryRepository;
 import com.boozeonwheel.product.repository.file.FileRepository;
 import com.boozeonwheel.product.repository.liquor.LiquorRepository;
@@ -122,7 +123,7 @@ public class ProductMasterBL {
 				try {
 					category = productCategoryRepository.findByCategory(master.getCategoryId());
 					dto.setCategoryName(category.getCategoryName());
-				} catch (CategoryNotFoundException e) {
+				} catch (NotFoundException e) {
 					e.printStackTrace();
 				}
 				
