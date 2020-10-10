@@ -29,6 +29,7 @@ public class BannerController {
 	public ResponseEntity<HomeResult> getBanner(@RequestParam("q[name_cont]") String bannerType,
 			@RequestParam("set") String setType) {
 		try {
+			System.out.println("Git hub change");
 			return new ResponseEntity<HomeResult>(productCategoryBL.getDummyBanner(), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<HomeResult>(HttpStatus.NOT_FOUND);
