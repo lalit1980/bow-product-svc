@@ -4,7 +4,7 @@ podTemplate(label: 'builder',
                     containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave', ttyEnabled: true, command: 'cat'),
                     containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat',
                             envVars: [containerEnvVar(key: 'DOCKER_CONFIG', value: '/tmp/'),]),
-                    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:v1.8.8', command: 'cat', ttyEnabled: true),
+                    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:latest', command: 'cat', ttyEnabled: true),
                     containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat')
             ],
             volumes: [
@@ -17,9 +17,9 @@ podTemplate(label: 'builder',
 
               node('builder') {
 
-                  def DOCKER_HUB_ACCOUNT = 'anilbhagat'
-                  def DOCKER_IMAGE_NAME = 'anilbhagat/kite'
-                  def K8S_DEPLOYMENT_NAME = 'kite-app'
+                  def DOCKER_HUB_ACCOUNT = 'lalit1980'
+                  def DOCKER_IMAGE_NAME = 'lalit1980/equity-bot.com'
+                  def K8S_DEPLOYMENT_NAME = 'bow-product-svc-app'
 
                   stage('Clone Hugo App Repository') {
                       checkout scm
