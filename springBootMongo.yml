@@ -41,11 +41,11 @@ spec:
               name: bow-product-svc-configmap
               key: password       
 ---
-# Node Port Service For bow-product-svc-app
+# Node Port Service For SpringApp
 apiVersion: v1
 kind: Service
 metadata:
-  name: bow-product-svc
+  name: bow-product-svc-app
 spec:
   type: NodePort
   ports:
