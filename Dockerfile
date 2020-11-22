@@ -4,7 +4,7 @@ RUN apt-get update && apt-get add /bin/sh
 RUN mkdir -p /opt/app
 ENV PROJECT_HOME /opt/app
 
-COPY target/bow-product-svc-1.0.jar $PROJECT_HOME/bow-product-svc.jar
+COPY target/bow-product-svc-1 $PROJECT_HOME/bow-product-svc.jar
 
 WORKDIR $PROJECT_HOME
 
