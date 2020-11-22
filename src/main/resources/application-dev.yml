@@ -7,8 +7,6 @@ spring:
     multipart:
       maxRequestSize: 70000000
       maxFileSize: 70000000
-  pid:
-    file: build/bow-product-svc.pid
 
   jmx:
     enabled: false
@@ -25,11 +23,6 @@ mongo:
   max-connections: 5
   connect-timeout-ms: 5000
   socket-timeout-ms: 5000
-
-# --------------------------------------------------------------------------------------------------
-
-logging:
-  config: classpath:logback.xml
 
 # --------------------------------------------------------------------------------------------------
 
@@ -50,23 +43,14 @@ endpoints:
     enabled: false
 
 # --------------------------------------------------------------------------------------------------
-
-# Scheduler configuration
-scheduler:
-  auto-start: true
-  startup-delay-seconds: 5
-  cron-exp-export: "0/15 * * * * ?"
-  cron-exp-archiving: "0/30 * * * * ?"
-
-# --------------------------------------------------------------------------------------------------
 dataflag:
   mockdata: true
-  
 files:
   folder: /Users/apple/classic
   max: 10000
+  
 amazonProperties:
   endpointUrl: https://s3.ap-south-1.amazonaws.com
-  accessKey: AKIAQ2GFWIPHLQ2CPWI4
-  secretKey: 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
+  accessKey: AKIAIRHFISEMAUXBOTZQ
+  secretKey: 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
   bucketName: boozeonwheel.com

@@ -11,8 +11,6 @@ spring:
     multipart:
       maxRequestSize: 70000000
       maxFileSize: 70000000
-  pid:
-    file: build/bow-product-svc.pid
 
   jmx:
     enabled: false
@@ -33,10 +31,6 @@ mongo:
   connect-timeout-ms: 5000
   socket-timeout-ms: 5000
 
-# --------------------------------------------------------------------------------------------------
-
-logging:
-  config: classpath:logback.xml
 
 # --------------------------------------------------------------------------------------------------
 
@@ -57,6 +51,12 @@ endpoints:
     enabled: false
 
 # --------------------------------------------------------------------------------------------------
+dataflag:
+  mockdata: true
+files:
+  folder: /Users/apple/classic
+  max: 10000
+    
 amazonProperties:
   endpointUrl: ${AWS_S3_ZONE_URL}
   accessKey: ${AWS_ACCESS_KEY}
