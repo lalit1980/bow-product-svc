@@ -1,33 +1,64 @@
 ### This is the main way to configure the application (other than annotations).
 ### This file is in Yaml format but you can also configure spring boot using the traditional
 ### Java properties file format. 
-
-
+    
+# Spring boot settings
 spring:
   profiles: kubernetes
-      
-barsizesminutes:
-    - 1
-    
-multiplierPeriods:
-    - 3,7
-    
-users:
-    - XS2241,j69qu3zl3k8brb2k,qbkog5dnnl92oq8m7yk1lbbljfr5ris2
+  application:
+    name: bow-product-svc
+  servlet:
+    multipart:
+      maxRequestSize: 70000000
+      maxFileSize: 70000000
+  pid:
+    file: build/bow-product-svc.pid
 
+  jmx:
+    enabled: false
+
+  data:
+    mongodb:
+      host: ${MONGO_DB_HOSTNAME}
+      port: 27017
+      username: ${MONGO_DB_USERNAME}
+      password: ${MONGO_DB_PASSWORD}
+      database: boozeonwheel
+      authentication-database: admin
+      
+# --------------------------------------------------------------------------------------------------
+mongo:
+  min-connections: 2
+  max-connections: 5
+  connect-timeout-ms: 5000
+  socket-timeout-ms: 5000
+
+# --------------------------------------------------------------------------------------------------
+
+logging:
+  config: classpath:logback.xml
+
+# --------------------------------------------------------------------------------------------------
+
+# The embedded server settings
 server:
-  address: 127.0.0.1
+  address: 0.0.0.0
   port: 9010
 
-report:
-  outputFolder: /Users/apple/data/reports/
+# --------------------------------------------------------------------------------------------------
 
-historicaldata:
-  day: 10
-  currentMonth: 18DEC
-  nifty: NIFTY18DEC
-  banknifty: BANKNIFTY18DEC
-  
+# Customise active actuator endpoints
+endpoints:
+  configprops:
+    enabled: false
+  info:
+    enabled: false
+  shutdown:
+    enabled: false
 
-timeSeries:
-  maxtickcount: 1000
+# --------------------------------------------------------------------------------------------------
+amazonProperties:
+  endpointUrl: ${AWS_S3_ZONE_URL}
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_SECRET_KEY}
+  bucketName: ${AWS_S3_BUCKET_NAME}
