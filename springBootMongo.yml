@@ -54,10 +54,27 @@ spec:
   selector:
     app: bow-product-svc-app
 ---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: ebspvc-mongo
+spec: 
+  accessModes: 
+    - ReadWriteOnce
+  resources: 
+    requests: 
+      storage: 20Gi
+  storageClassName: default
+  
+---
+
 # Mongo RC with host path Volume
 apiVersion: v1
 kind: ReplicationController
 metadata:
+  labels:
+    name: mongo
   name: mongo-controller
 spec:
   replicas: 1
@@ -68,6 +85,9 @@ spec:
       labels:
         app: mongo
     spec:
+      volumes: 
+      - name: epsvc
+        persistantVolumeClaim: ebspvc-mongo
       containers:
       - image: mongo
         name: mongo
@@ -85,12 +105,8 @@ spec:
         ports:
         - containerPort: 27017
         volumeMounts:
-        - name: mongo-persistent-storage
+        - name: ebspvc
           mountPath: /data/db
-      volumes:
-      - name: mongo-persistent-storage
-        hostPath:
-         path: /tmp/dbbackup
 ---
 # Mongo Node Port RC
 apiVersion: v1
