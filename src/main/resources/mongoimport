@@ -1,5 +1,0 @@
-mongoimport --db boozeonwheel --collection M_LIQUOR --type csv --headerline --file /Users/apple/Downloads/Warehouse_and_Retail_Sales.csv
-
-
-http://localhost:9010/api/liquor/v1.0/23345
-http://localhost:9010/api/liquor/v1.0/23345
