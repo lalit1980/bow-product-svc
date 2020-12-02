@@ -1,0 +1,64 @@
+### This is the main way to configure the application (other than annotations).
+### This file is in Yaml format but you can also configure spring boot using the traditional
+### Java properties file format. 
+    
+# Spring boot settings
+spring:
+  profiles: kubernetes
+  application:
+    name: bow-product-svc
+  servlet:
+    multipart:
+      maxRequestSize: 70000000
+      maxFileSize: 70000000
+
+  jmx:
+    enabled: false
+
+  data:
+    mongodb:
+      host: ${MONGO_DB_HOSTNAME}
+      port: 27017
+      username: ${MONGO_DB_USERNAME}
+      password: ${MONGO_DB_PASSWORD}
+      database: boozeonwheel
+      authentication-database: admin
+      
+# --------------------------------------------------------------------------------------------------
+mongo:
+  min-connections: 2
+  max-connections: 5
+  connect-timeout-ms: 5000
+  socket-timeout-ms: 5000
+
+
+# --------------------------------------------------------------------------------------------------
+
+# The embedded server settings
+server:
+  address: 0.0.0.0
+  port: 9010
+
+# --------------------------------------------------------------------------------------------------
+
+# Customise active actuator endpoints
+endpoints:
+  configprops:
+    enabled: false
+  info:
+    enabled: false
+  shutdown:
+    enabled: false
+
+# --------------------------------------------------------------------------------------------------
+dataflag:
+  mockdata: true
+files:
+  folder: /Users/apple/classic
+  max: 10000
+    
+amazonProperties:
+  endpointUrl: ${AWS_S3_ZONE_URL}
+  accessKey: ${AWS_ACCESS_KEY}
+  secretKey: ${AWS_SECRET_KEY}
+  bucketName: ${AWS_S3_BUCKET_NAME}
