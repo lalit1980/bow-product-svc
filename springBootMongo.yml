@@ -1,0 +1,122 @@
+# Config Map 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bow-product-svc-configmap
+data:
+  # Configuration values can be set as key-value properties
+  username: springapp
+  password: mongodb@123
+---
+# Replication Controller for bow-product-svc-app
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: spring-controller
+spec:
+  replicas: 1
+  selector:
+    app: bow-product-svc-app
+  template:
+    metadata:
+      labels:
+        app: bow-product-svc-app
+    spec:
+      containers:
+      - image: lalit1980/equity-bot.com
+        name: bow-product-svc-app
+        ports:
+        - containerPort: 9010  
+        env:
+        - name: MONGO_DB_HOSTNAME
+          value: mongo
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: bow-product-svc-configmap
+              key: username 
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: bow-product-svc-configmap
+              key: password       
+---
+# Node Port Service For SpringApp
+apiVersion: v1
+kind: Service
+metadata:
+  name: bow-product-svc-app
+spec:
+  type: NodePort
+  ports:
+    - port: 9010
+      targetPort: 9010
+  selector:
+    app: bow-product-svc-app
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: ebspvc-mongo
+spec: 
+  accessModes: 
+    - ReadWriteOnce
+  resources: 
+    requests: 
+      storage: 20Gi
+  storageClassName: default
+  
+---
+
+# Mongo RC with host path Volume
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    name: mongo
+  name: mongo-controller
+spec:
+  replicas: 1
+  selector:
+    app: mongo
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      volumes: 
+      - name: epsvc
+        persistantVolumeClaim: ebspvc-mongo
+      containers:
+      - image: mongo
+        name: mongo
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            configMapKeyRef:
+              name: bow-product-svc-configmap
+              key: username 
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: bow-product-svc-configmap
+              key: password 
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: ebspvc
+          mountPath: /data/db
+---
+# Mongo Node Port RC
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo
+spec:
+  type: ClusterIP
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: mongo

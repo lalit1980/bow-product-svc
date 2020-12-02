@@ -1,0 +1,56 @@
+# Spring boot settings
+spring:
+  profiles: dev
+  application:
+    name: bow-product-svc
+  servlet:
+    multipart:
+      maxRequestSize: 70000000
+      maxFileSize: 70000000
+
+  jmx:
+    enabled: false
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: boozeonwheel
+      
+# --------------------------------------------------------------------------------------------------
+mongo:
+  min-connections: 2
+  max-connections: 5
+  connect-timeout-ms: 5000
+  socket-timeout-ms: 5000
+
+# --------------------------------------------------------------------------------------------------
+
+# The embedded server settings
+server:
+  address: localhost
+  port: 9010
+
+# --------------------------------------------------------------------------------------------------
+
+# Customise active actuator endpoints
+endpoints:
+  configprops:
+    enabled: false
+  info:
+    enabled: false
+  shutdown:
+    enabled: false
+
+# --------------------------------------------------------------------------------------------------
+dataflag:
+  mockdata: true
+files:
+  folder: /Users/apple/classic
+  max: 10000
+  
+amazonProperties:
+  endpointUrl: https://s3.ap-south-1.amazonaws.com
+  accessKey: AKIAIRHFISEMAUXBOTZQ
+  secretKey: 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
+  bucketName: boozeonwheel.com
