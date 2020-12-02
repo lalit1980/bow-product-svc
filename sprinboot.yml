@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap 
+metadata:
+  name: bow-product-svc-configmap
+data:
+  # Configuration values can be set as key-value properties
+  username: springapp
+  password: mongodb@123
