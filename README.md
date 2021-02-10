@@ -1,1 +1,0 @@
-# bow-product-svc
