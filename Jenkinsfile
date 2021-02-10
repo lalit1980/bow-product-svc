@@ -5,7 +5,7 @@ node{
         def TAG_NUMBER = "${env.BUILD_NUMBER}"
         def BRANCH = "${env.BRANCH_NAME}"
         stage("SCM Checkout"){
-            git branch: 'develop', credentialsId: 'GITHUB_CREDENTIAL1', url: 'https://github.com/lalit1980/bow-product-svc.git'
+            git credentialsId: 'GITHUB_CREDENTIAL1', url: 'https://github.com/lalit1980/bow-product-svc.git'
         }
         stage("Unit Test & App Scan"){
             echo "Unit Test Case Execution started...."
