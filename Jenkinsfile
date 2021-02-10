@@ -10,6 +10,7 @@ node{
         stage("Unit Test & App Scan"){
             echo "Unit Test Case Execution started...."
             echo "Unit Test Case Execution ended...."
+            sh "mvn clean install"
             echo "AppScan for vulnerabilty scan execution started...."
             echo "AppScan for vulnerabilty scan execution ended...."
         }
