@@ -19,3 +19,4 @@ src/main/java/com/boozeonwheel/.DS_Store
 *.jpg
 .idea/
 *.iml
+.DS_Store
