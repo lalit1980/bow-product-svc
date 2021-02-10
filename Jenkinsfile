@@ -1,52 +1,39 @@
 
-podTemplate(label: 'builder',
-            containers: [
-                    containerTemplate(name: 'jnlp', image: 'jenkinsci/jnlp-slave', ttyEnabled: true, command: 'cat'),
-                    containerTemplate(name: 'docker', image: 'docker', ttyEnabled: true, command: 'cat',
-                            envVars: [containerEnvVar(key: 'DOCKER_CONFIG', value: '/tmp/'),]),
-                    containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl:latest', command: 'cat', ttyEnabled: true),
-                    containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat')
-            ],
-            volumes: [
-                    hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
-                    secretVolume(secretName: 'docker-config', mountPath: '/tmp'),
-                    secretVolume(secretName: 'kube-config', mountPath: '/root/.kube'),
-                    persistentVolumeClaim(claimName: 'mavenrepo-volume-claim', mountPath: '/root/.m2/repository', readOnly: false)
-            ]) 
-            {
-
-              node('builder') {
-
-                  def DOCKER_HUB_ACCOUNT = 'lalit1980'
-                  def DOCKER_IMAGE_NAME = 'lalit1980/equity-bot.com'
-                  def K8S_DEPLOYMENT_NAME = 'bow-product-svc-app'
-
-                  stage('Clone Hugo App Repository') {
-                      checkout scm
-
-                      stage('Build Code') {
-                        container('maven') {
-                          sh 'mvn clean install'
-                          }
-                        }
-              
-                      
-
-                      container('docker') {
-                          stage('Docker Build & Push Current & Latest Versions') {
-                              sh ("docker build -t ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} .")
-                              sh ("docker push ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")
-                              sh ("docker tag ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:latest")
-                              sh ("docker push ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:latest")
-                          }
-                      }
-
-                      container('kubectl') {
-                          stage('Deploy New Build To Kubernetes') {
-                              sh ("kubectl set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}")
-                          }
-                      }
-
-                  }        
-              }
+node{
+        def DOCKER_HUB_ACCOUNT = "lalit1980"
+        def DOCKER_IMAGE_NAME  = "bow-product-svc"
+        def TAG_NUMBER = "${env.BUILD_NUMBER}"
+        def BRANCH = "${env.BRANCH_NAME}""
+        stage("SCM Checkout"){
+            git branch: '${BRANCH}', credentialsId: 'GITHUB_CREDENTIAL1', url: 'https://github.com/lalit1980/bow-product-svc.git'
+        }
+        stage("Unit Test & App Scan"){
+            echo "Unit Test Case Execution started...."
+            echo "Unit Test Case Execution ended...."
+            echo "AppScan for vulnerabilty scan execution started...."
+            echo "AppScan for vulnerabilty scan execution ended...."
+        }
+        stage("SonarQube"){
+            echo "SonarQube scan started...."
+            echo "SonarQube coverage started...."
+        }
+        stage("Docker Build & Tag"){
+            withCredentials([string(credentialsId: 'DOCKER_HUB_CREDENTIALS', variable: 'DOCKER_HUB_CREDENTIALS')]) {
+                sh "docker login -u lalit1980 -p ${DOCKER_HUB_CREDENTIALS}"
             }
+            echo "docker build -t ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${TAG_NUMBER} ."
+            sh ("docker build -t ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${TAG_NUMBER} .")
+        }
+
+        stage("Docker Push"){
+            echo "docker push ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${TAG_NUMBER}"
+            sh ("docker push ${DOCKER_HUB_ACCOUNT}/${DOCKER_IMAGE_NAME}:${TAG_NUMBER}")
+        }
+
+        stage("Deployment Report and Notification"){
+            echo "Deploment status report published..."
+
+        }
+
+}
+
