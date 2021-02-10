@@ -175,5 +175,5 @@ spec:
       - name: bow
         image: lalit1980/bow-product-svc:tagVersion
         ports:
-        - containerPort: 80
+        - containerPort: 9010
 ---
