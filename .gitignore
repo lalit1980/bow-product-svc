@@ -1,5 +1,3 @@
-
-Dockerfile
 HELP.md
 src/.DS_Store
 src/main/.DS_Store
@@ -13,7 +11,9 @@ src/main/java/com/boozeonwheel/.DS_Store
 .settings/org.eclipse.core.resources.prefs
 .settings/org.eclipse.jdt.core.prefs
 .settings/org.eclipse.m2e.core.prefs
-*.jpeg
-103.jpg
+
 .DS_Store
 *.jpg
+.idea/
+*.iml
+
