@@ -10,7 +10,9 @@ node{
         stage("Unit Test & App Scan"){
             echo "Unit Test Case Execution started...."
             echo "Unit Test Case Execution ended...."
-            sh "mvn clean install"
+            def mavenHome =  tool name: "Maven3.6.3", type: "maven"
+            def mavenCMD = "${mavenHome}/bin/mvn"
+            sh "${mavenCMD} clean package"
             echo "AppScan for vulnerabilty scan execution started...."
             echo "AppScan for vulnerabilty scan execution ended...."
         }
