@@ -3,7 +3,7 @@ node{
         def DOCKER_HUB_ACCOUNT = "lalit1980"
         def DOCKER_IMAGE_NAME  = "bow-product-svc"
         def TAG_NUMBER = "${env.BUILD_NUMBER}"
-        def BRANCH = "${env.BRANCH_NAME}""
+        def BRANCH = "${env.BRANCH_NAME}"
         stage("SCM Checkout"){
             git branch: '${BRANCH}', credentialsId: 'GITHUB_CREDENTIAL1', url: 'https://github.com/lalit1980/bow-product-svc.git'
         }
