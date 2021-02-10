@@ -6,7 +6,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  MONGO_DB_HOSTNAME: mongo
+  MONGO_DB_HOSTNAME: mongodb://mongo:27017/boozeonwheel
   MONGODBDATABASE: boozeonwheel
   SERVERHOST: 0.0.0.0
   FILE_PATH: /data/files
