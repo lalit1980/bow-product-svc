@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.boozeonwheel</groupId>
 	<artifactId>bow-product-svc</artifactId>
-	<version>1</version>
+	<version>release</version>
 	<name>bow-product-svc</name>
 	<description>BoozeOnWheel Product Category Master Data Service</description>
 
