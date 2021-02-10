@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: bow-api
+  name: bow-api-ns
 ---
 apiVersion: v1
 data:
@@ -17,13 +17,13 @@ data:
 kind: ConfigMap
 metadata:
   name: bow-api-config
-  namespace: bow-api
+  namespace: bow-api-ns
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bow-api-app
-  namespace: bow-api
+  namespace: bow-api-ns
 spec:
   replicas: 1
   selector:
@@ -101,7 +101,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bow-api-service
-  namespace: bow-api
+  namespace: bow-api-ns
 spec:
   clusterIP: None
   ports:
@@ -122,7 +122,7 @@ apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: selfsigned-cert
-  namespace: bow-api
+  namespace: bow-api-ns
 spec:
   commonName: boozeonwheels.com
   secretName: selfsigned-cert-tls
@@ -160,7 +160,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bow-api
-  namespace: bow-api
+  namespace: bow-api-ns
 spec:
   replicas: 2
   selector:
