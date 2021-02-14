@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: bow-api-ns
+  name: bow-api
 ---
 apiVersion: v1
 data:
-  MONGO_DB_HOSTNAME: mongodb://mongo:27017/boozeonwheel
+  MONGO_DB_HOSTNAME: mongo
   MONGODBDATABASE: boozeonwheel
   SERVERHOST: 0.0.0.0
   FILE_PATH: /data/files
@@ -17,13 +17,13 @@ data:
 kind: ConfigMap
 metadata:
   name: bow-api-config
-  namespace: bow-api-ns
+  namespace: bow-api
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bow-api-app
-  namespace: bow-api-ns
+  namespace: bow-api
 spec:
   replicas: 1
   selector:
@@ -101,7 +101,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: bow-api-service
-  namespace: bow-api-ns
+  namespace: bow-api
 spec:
   clusterIP: None
   ports:
@@ -122,7 +122,7 @@ apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: selfsigned-cert
-  namespace: bow-api-ns
+  namespace: bow-api
 spec:
   commonName: boozeonwheels.com
   secretName: selfsigned-cert-tls
@@ -160,7 +160,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: bow-api
-  namespace: bow-api-ns
+  namespace: bow-api
 spec:
   replicas: 2
   selector:
