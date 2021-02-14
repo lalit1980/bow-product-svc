@@ -1,4 +1,4 @@
-
+---
 apiVersion: v1
 kind: Service
 metadata:
@@ -18,48 +18,88 @@ kind: StatefulSet
 metadata:
   name: mongo
 spec:
-  serviceName: "mongo"
-  updateStrategy:
-    type: RollingUpdate
-  replicas: 3
   selector:
-   matchLabels:
-     role: mongo
+    matchLabels:
+      role: mongo
+  serviceName: mongo
+  replicas: 3
   template:
     metadata:
       labels:
-        role: "mongo"
-        environment: development
+        environment: test
+        role: mongo
     spec:
-      terminationGracePeriodSeconds: 10
       containers:
-        - name: mongo
-          image: mongo
+        -
           command:
-            - mongod
-            - "--replSet"
-            - rs0
-            - "--smallfiles"
-            - "--noprealloc"
-            - "--bind_ip"
-            - 0.0.0.0
+            - /bin/sh
+            - "-c"
+            - |
+                if [ -f /data/db/admin-user.lock ]; then
+                  mongod --replSet rs0 --clusterAuthMode keyFile --keyFile /etc/secrets-volume/mongodb-keyfile --setParameter authenticationMechanisms=SCRAM-SHA-1;
+                else
+                  mongod --auth;
+                fi;
+          image: "mongo:3.4.9"
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - /bin/sh
+                  - "-c"
+                  - |
+                      if [ ! -f /data/db/admin-user.lock ]; then
+                        sleep 5;
+                        touch /data/db/admin-user.lock
+                        if [ "$HOSTNAME" = "mongo-0" ]; then
+                          mongo --eval 'db = db.getSiblingDB("admin"); db.createUser({ user: "admin", pwd: "password", roles: [{ role: "root", db: "admin" }]});';
+                        fi;
+                        mongod --shutdown;
+                      fi;
+          name: mongo
           ports:
-            - containerPort: 27017
+            -
+              containerPort: 27017
           volumeMounts:
-            - name: mongo-persistent-storage
+            -
+              mountPath: /etc/secrets-volume
+              name: mongo-key
+              readOnly: true
+            -
               mountPath: /data/db
-        - name: proposal-mongo-sidecar
-          image: austbot/mongo-k8s-sidecar
+              name: mongo-persistent-storage
+        -
           env:
-            - name: KUBERNETES_MONGO_SERVICE_NAME
-              value: "mongo"
-            - name: MONGO_SIDECAR_POD_LABELS
-              value: "role=mongo,environment=development"
+            -
+              name: MONGO_SIDECAR_POD_LABELS
+              value: "role=mongo,environment=test"
+            -
+              name: MONGODB_USERNAME
+              value: admin
+            -
+              name: MONGODB_PASSWORD
+              value: password
+            -
+              name: MONGODB_DATABASE
+              value: admin
+          image: cvallance/mongo-k8s-sidecar
+          name: mongo-sidecar
+      terminationGracePeriodSeconds: 10
+      volumes:
+        -
+          name: mongo-key
+          secret:
+            defaultMode: 256
+            secretName: mongo-key
   volumeClaimTemplates:
-  - metadata:
-      name: mongo-persistent-storage
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 10Gi
+    -
+      metadata:
+        annotations:
+          volume.beta.kubernetes.io/storage-class: default
+        name: mongo-persistent-storage
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
