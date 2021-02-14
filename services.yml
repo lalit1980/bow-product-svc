@@ -121,7 +121,7 @@ apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
   name: test-selfsigned
-  namespace: api
+  namespace: bow-api
 spec:
   selfSigned: {}
 ---
@@ -141,7 +141,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: bow-ingress
-  namespace: api
+  namespace: bow-api
   annotations:
     kubernetes.io/ingress.class: "nginx"
     ingress.kubernetes.io/ssl-redirect: "true"
