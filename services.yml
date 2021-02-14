@@ -14,6 +14,7 @@ data:
   AWS_ACCESS_KEY: AKIAI3YUCOGLGYGO4R7A
   AWS_SECRET_KEY: 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
   AWS_BUCKET_NAME: boozeonwheel.com
+  MONGO_URI: bow-api-service
 kind: ConfigMap
 metadata:
   name: bow-api-config
@@ -90,7 +91,6 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   key: MONGO_URI
-                  value: mongo
                   name: bow-api-config
 
           image: "lalit1980/bow-product-svc:tagVersion"
