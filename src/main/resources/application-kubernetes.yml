@@ -15,8 +15,7 @@ spring:
 
   data:
     mongodb:
-      host: ${MONGO_DB_HOSTNAME}
-      port: 27017
+      host: ${MONGO_URI}
       database: boozeonwheel
 
 # --------------------------------------------------------------------------------------------------
