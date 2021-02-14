@@ -38,12 +38,6 @@ spec:
         -
           env:
             -
-              name: MONGODBHOST
-              valueFrom:
-                configMapKeyRef:
-                  key: MONGO_DB_HOSTNAME
-                  name: bow-api-config
-            -
               name: MONGODBDATABASE
               valueFrom:
                 configMapKeyRef:
