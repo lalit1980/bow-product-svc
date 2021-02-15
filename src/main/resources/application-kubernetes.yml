@@ -1,6 +1,6 @@
 # Spring boot settings
 spring:
-  profiles: dev
+  profiles: kubernetes
   application:
     name: bow-product-svc
   servlet:
