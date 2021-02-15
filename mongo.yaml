@@ -36,6 +36,7 @@ spec:
             - "-c"
             - |
                 if [ -f /data/db/admin-user.lock ]; then
+                  db.updateUser("admin",{roles : ["userAdminAnyDatabase","userAdmin","readWrite","dbAdmin","clusterAdmin","readWriteAnyDatabase","dbAdminAnyDatabase"]});
                   mongod --replSet rs0 --clusterAuthMode keyFile --keyFile /etc/secrets-volume/mongodb-keyfile --setParameter authenticationMechanisms=SCRAM-SHA-1;
                 else
                   mongod --auth;
@@ -52,6 +53,7 @@ spec:
                         sleep 5;
                         touch /data/db/admin-user.lock
                         if [ "$HOSTNAME" = "mongo-0" ]; then
+                          db.updateUser("admin",{roles : ["userAdminAnyDatabase","userAdmin","readWrite","dbAdmin","clusterAdmin","readWriteAnyDatabase","dbAdminAnyDatabase"]});
                           mongo --eval 'db = db.getSiblingDB("admin"); db.createUser({ user: "admin", pwd: "password", roles: [{ role: "root", db: "admin" }]});';
                         fi;
                         mongod --shutdown;

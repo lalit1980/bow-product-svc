@@ -4,6 +4,8 @@ import static springfox.documentation.builders.PathSelectors.regex;
 
 import java.util.TimeZone;
 
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +30,8 @@ public class BoozeOnWheelApplication {
 
     public static void main(String[] args) {
         TimeZone.setDefault(TimeZone.getTimeZone("IST"));
+        MongoClient mongoClient = MongoClients.create(
+                "mongodb://mongo-0:27017,mongo-1:27017,mongo-2:27017/?replicaSet=rs");
         SpringApplication.run(BoozeOnWheelApplication.class, args);
     }
 
