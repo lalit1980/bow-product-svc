@@ -2,7 +2,7 @@
 apiVersion: v1
 data:
   MONGODBHOST: mongo-0,mongo-1,mongo-2
-  PORT: 27017
+  PORT: "27017"
   USERNAME: admin
   PASSWORD: password
   MONGODBDATABASE: admin
