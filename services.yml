@@ -1,7 +1,7 @@
 ---
 apiVersion: v1
 data:
-  MONGO_DB_HOSTNAME: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
+  MONGODBHOST: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
   MONGODBDATABASE: admin
   SERVERHOST: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
   FILE_PATH: /data/files
@@ -76,10 +76,10 @@ spec:
                   key: AWS_BUCKET_NAME
                   name: bow-api-config
 
-            - name: MONGOURI
+            - name: MONGODBHOST
               valueFrom:
                 configMapKeyRef:
-                  key: MONGO_URI
+                  key: MONGODBHOST
                   name: bow-api-config
 
           image: "lalit1980/bow-product-svc:tagVersion"
