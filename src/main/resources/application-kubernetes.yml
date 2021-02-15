@@ -18,6 +18,7 @@ spring:
       host: ${MONGO_URI}
       database: boozeonwheel
 
+
 # --------------------------------------------------------------------------------------------------
 mongo:
   min-connections: 2
