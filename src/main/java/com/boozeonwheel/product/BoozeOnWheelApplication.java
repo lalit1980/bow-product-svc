@@ -14,6 +14,7 @@ import com.mongodb.connection.ClusterSettings;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,11 +30,11 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication
+
 @EnableSwagger2
 @Import(BeanValidatorPluginsConfiguration.class)
 @Configuration
-@EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
+@SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
 public class BoozeOnWheelApplication {
 
     public static void main(String[] args) {
