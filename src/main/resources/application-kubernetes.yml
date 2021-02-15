@@ -30,7 +30,7 @@ mongo:
 
 # The embedded server settings
 server:
-  address: localhost
+  address: 0.0.0.0
   port: 9010
 
 # --------------------------------------------------------------------------------------------------
