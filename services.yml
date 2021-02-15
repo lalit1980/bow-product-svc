@@ -1,15 +1,15 @@
 ---
 apiVersion: v1
 data:
-  MONGO_DB_HOSTNAME: mongodb://mongo:27017/boozeonwheel
-  MONGODBDATABASE: boozeonwheel
-  SERVERHOST: mongodb://mongo:27017/boozeonwheel
+  MONGO_DB_HOSTNAME: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
+  MONGODBDATABASE: admin
+  SERVERHOST: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
   FILE_PATH: /data/files
   AWS_ENDPOINT_URL: https://s3.ap-south-1.amazonaws.com
   AWS_ACCESS_KEY: AKIAI3YUCOGLGYGO4R7A
   AWS_SECRET_KEY: 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
   AWS_BUCKET_NAME: boozeonwheel.com
-  MONGO_URI: bow-api-service
+  MONGO_URI: mongo
 kind: ConfigMap
 metadata:
   name: bow-api-config

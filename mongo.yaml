@@ -1,4 +1,8 @@
 ---
+## Generate a key
+# openssl rand -base64 741 > mongodb-keyfile
+## Create k8s secrets
+# kubectl create secret generic mongo-key --from-file=mongodb-keyfile
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,8 +11,8 @@ metadata:
     name: mongo
 spec:
   ports:
-  - port: 27017
-    targetPort: 27017
+    - port: 27017
+      targetPort: 27017
   clusterIP: None
   selector:
     role: mongo
@@ -35,12 +39,11 @@ spec:
             - /bin/sh
             - "-c"
             - |
-                if [ -f /data/db/admin-user.lock ]; then
-                  db.updateUser("admin",{roles : ["userAdminAnyDatabase","userAdmin","readWrite","dbAdmin","clusterAdmin","readWriteAnyDatabase","dbAdminAnyDatabase"]});
-                  mongod --replSet rs0 --clusterAuthMode keyFile --keyFile /etc/secrets-volume/mongodb-keyfile --setParameter authenticationMechanisms=SCRAM-SHA-1;
-                else
-                  mongod --auth;
-                fi;
+              if [ -f /data/db/admin-user.lock ]; then
+                mongod --replSet rs0 --clusterAuthMode keyFile --keyFile /etc/secrets-volume/mongodb-keyfile --setParameter authenticationMechanisms=SCRAM-SHA-1;
+              else
+                mongod --auth;
+              fi;
           image: "mongo:3.4.9"
           lifecycle:
             postStart:
@@ -49,15 +52,14 @@ spec:
                   - /bin/sh
                   - "-c"
                   - |
-                      if [ ! -f /data/db/admin-user.lock ]; then
-                        sleep 5;
-                        touch /data/db/admin-user.lock
-                        if [ "$HOSTNAME" = "mongo-0" ]; then
-                          db.updateUser("admin",{roles : ["userAdminAnyDatabase","userAdmin","readWrite","dbAdmin","clusterAdmin","readWriteAnyDatabase","dbAdminAnyDatabase"]});
-                          mongo --eval 'db = db.getSiblingDB("admin"); db.createUser({ user: "admin", pwd: "password", roles: [{ role: "root", db: "admin" }]});';
-                        fi;
-                        mongod --shutdown;
+                    if [ ! -f /data/db/admin-user.lock ]; then
+                      sleep 5;
+                      touch /data/db/admin-user.lock
+                      if [ "$HOSTNAME" = "mongo-0" ]; then
+                        mongo --eval 'db = db.getSiblingDB("admin"); db.createUser({ user: "admin", pwd: "password", roles: [{ role: "root", db: "admin" }]});';
                       fi;
+                      mongod --shutdown;
+                    fi;
           name: mongo
           ports:
             -
@@ -104,4 +106,5 @@ spec:
           - ReadWriteOnce
         resources:
           requests:
-            storage: 100Gi
+            storage: 50Gi
+
