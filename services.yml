@@ -9,7 +9,7 @@ data:
   AWS_ACCESS_KEY: AKIAI3YUCOGLGYGO4R7A
   AWS_SECRET_KEY: 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
   AWS_BUCKET_NAME: boozeonwheel.com
-  MONGO_URI: "mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0"
+  MONGO_URI: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
 kind: ConfigMap
 metadata:
   name: bow-api-config
