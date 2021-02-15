@@ -2,14 +2,14 @@
 apiVersion: v1
 data:
   MONGODBHOST: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
-  MONGODBDATABASE: admin
+  MONGODBDATABASE: "admin"
   SERVERHOST: mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0
   FILE_PATH: /data/files
   AWS_ENDPOINT_URL: https://s3.ap-south-1.amazonaws.com
   AWS_ACCESS_KEY: AKIAI3YUCOGLGYGO4R7A
   AWS_SECRET_KEY: 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
   AWS_BUCKET_NAME: boozeonwheel.com
-  MONGO_URI: mongo
+  MONGO_URI: "mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0"
 kind: ConfigMap
 metadata:
   name: bow-api-config
@@ -39,7 +39,10 @@ spec:
           env:
             -
               name: MONGODBDATABASE
-              value: admin
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGODBDATABASE
+                  name: bow-api-config
             -
               name: FILEPATH
               valueFrom:
@@ -73,13 +76,11 @@ spec:
                   key: AWS_BUCKET_NAME
                   name: bow-api-config
 
-            -
-              name: MONGODBHOST
-              value: "mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0"
-            - name: USERNAME
-              value: "admin"
-            - name: PASSWORD
-                value: "password"
+            - name: MONGOURI
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_URI
+                  name: bow-api-config
 
           image: "lalit1980/bow-product-svc:tagVersion"
           volumeMounts:
