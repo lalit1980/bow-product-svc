@@ -39,10 +39,7 @@ spec:
           env:
             -
               name: MONGODBDATABASE
-              valueFrom:
-                configMapKeyRef:
-                  key: MONGODBDATABASE
-                  name: bow-api-config
+              value: admin
             -
               name: FILEPATH
               valueFrom:
@@ -76,11 +73,13 @@ spec:
                   key: AWS_BUCKET_NAME
                   name: bow-api-config
 
-            - name: MONGODBHOST
-              valueFrom:
-                configMapKeyRef:
-                  key: MONGODBHOST
-                  name: bow-api-config
+            -
+              name: MONGODBHOST
+              value: "mongodb://admin:password@mongo-0,mongo-1,mongo-2:27017/admin?replicaSet=rs0"
+            - name: USERNAME
+              value: "admin"
+            - name: PASSWORD
+                value: "password"
 
           image: "lalit1980/bow-product-svc:tagVersion"
           volumeMounts:
