@@ -15,7 +15,7 @@ spring:
 
   data:
     mongodb:
-      uri: mongodb://${USERNAME}:${PASSWORD}@${MONGODBHOST}:27017/${MONGODBDATABASE}/admin?replicaSet=rs0
+      uri: mongodb://${USERNAME}:${PASSWORD}@${MONGODBHOST}:27017/${MONGODBDATABASE}
 
 # --------------------------------------------------------------------------------------------------
 mongo:
