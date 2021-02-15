@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.BulkOperations.BulkMode;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -14,11 +15,16 @@ import com.boozeonwheel.product.domain.master.Master;
 import com.boozeonwheel.product.dto.master.MasterDTO;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ProductMasterRepositoryImpl implements ProductMasterRespositoryCustom{
 
-	@Autowired
-	MongoOperations mongoTemplate;
+
+	private final MongoTemplate mongoTemplate;
+	public ProductMasterRepositoryImpl(MongoTemplate mongoTemplate) {
+		this.mongoTemplate = mongoTemplate;
+	}
 	
 	@Override
 	public Master findByProductMasterId(long id) {
