@@ -137,24 +137,3 @@ spec:
 
 ---
 
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: bow-api
-  namespace: default
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: bow-api-app
-  template:
-    metadata:
-      labels:
-        app: bow-api-app
-    spec:
-      containers:
-      - name: bow-api
-        image: lalit1980/bow-product-svc:tagVersion
-        ports:
-        - containerPort: 9010
----
