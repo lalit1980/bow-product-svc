@@ -35,14 +35,16 @@ node{
       stage("K8S Deployment"){
             echo "Kubernetes deployment started....."
             sh "chmod +x changeTag.sh"
+                sh "chmod 400 nishu_bow.pem"
+                sh "chmod 400 ansible.pem"
                 sh "./changeTag.sh ${TAG_NUMBER}"
                 sshagent(['KOPS-WORKSTATION']) {
-                    sh "ssh ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com rm -rf /home/ubuntu/bow/api/"
-                    sh "ssh ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com mkdir -p /home/ubuntu/bow/api/"
+                    sh "ssh -i nishu_bow.pem ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com rm -rf /home/ubuntu/bow/api/"
+                    sh "ssh -i nishu_bow.pemubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com mkdir -p /home/ubuntu/bow/api/"
                     sh "scp -o StrictHostKeyChecking=no api_bow.yml ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/bow/api/"
                     script{
                         try{
-                            sh "ssh ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com kubectl apply -f /home/ubuntu/bow/api/api_bow.yml"
+                            sh "ssh -i nishu_bow.pem ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com kubectl apply -f /home/ubuntu/bow/api/api_bow.yml"
                         }catch(error){
                             echo "Kubernetes deployment ended with error....."
                             //sh "ssh ubuntu@ec2-52-66-125-64.ap-south-1.compute.amazonaws.com kubectl create -f /home/ubuntu/bow/"
