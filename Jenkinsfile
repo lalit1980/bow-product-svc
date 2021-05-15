@@ -39,8 +39,8 @@ node{
                 sh "chmod 400 ansible.pem"
                 sh "./changeTag.sh ${TAG_NUMBER}"
                 sshagent(['KOPS-WORKSTATION']) {
-                    sh "ssh -i nishu_bow.pem ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com rm -rf /home/ubuntu/bow/api/"
-                    sh "ssh -i nishu_bow.pemubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com mkdir -p /home/ubuntu/bow/api/"
+                    sh "ssh -i nishu_bow.pem ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com rm -rf /home/ubuntu/bow/api/"
+                    sh "ssh -i nishu_bow.pem ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com mkdir -p /home/ubuntu/bow/api/"
                     sh "scp -o StrictHostKeyChecking=no api_bow.yml ubuntu@ec2-52-74-34-239.ap-southeast-1.compute.amazonaws.com:/home/ubuntu/bow/api/"
                     script{
                         try{
