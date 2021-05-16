@@ -3,10 +3,10 @@ apiVersion: v1
 data:
   FILE_PATH: /data/files
   AWS_ENDPOINT_URL: "https://s3.ap-south-1.amazonaws.com"
-  AWS_ACCESS_KEY: "AKIAI3YUCOGLGYGO4R7A"
-  AWS_SECRET_KEY: "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"
-  AWS_BUCKET_NAME: "boozeonwheel.com"
-  MONGO_URL: "mongodb://mongo:27017/boozeonwheel"
+  AWS_ACCESS_KEY: "AKIAVAGJA4ISYFVAOQMC"
+  AWS_SECRET_KEY: "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"
+  AWS_BUCKET_NAME: "bow-sg"
+  MONGO_URL: "mongodb://admin:password@mongo:27017/boozeonwheel?authSource=admin"
 kind: ConfigMap
 metadata:
   name: bow-api-config
@@ -74,7 +74,7 @@ spec:
                   key: MONGO_URL
                   name: bow-api-config
 
-          image: "lalit1980/bow-product-svc:20"
+          image: "lalit1980/bow-product-svc:tagVersion"
           volumeMounts:
           - mountPath: "/data/files"
             name: mypd
@@ -143,4 +143,3 @@ spec:
           servicePort: 9010
 
 ---
-
