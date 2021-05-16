@@ -6,6 +6,7 @@ data:
   AWS_ACCESS_KEY: "AKIAI3YUCOGLGYGO4R7A"
   AWS_SECRET_KEY: "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"
   AWS_BUCKET_NAME: "boozeonwheel.com"
+  MONGO_URL: "mongodb://mongo:27017/boozeonwheel"
 kind: ConfigMap
 metadata:
   name: bow-api-config
@@ -29,45 +30,51 @@ spec:
       volumes:
       - name: mypd
         persistentVolumeClaim:
-          claimName: myclaim
+          claimName: mongo-persistent-storage
       containers:
         -
           env:
 
             -
-              name: FILEPATH
+              name: FILE_PATH
               valueFrom:
                 configMapKeyRef:
                   key: FILE_PATH
                   name: bow-api-config
             -
-              name: AWSENDPOINTURL
+              name: AWS_ENDPOINT_URL
               valueFrom:
                 configMapKeyRef:
                   key: AWS_ENDPOINT_URL
                   name: bow-api-config
 
             -
-              name: AWSACCESSKEY
+              name: AWS_ACCESS_KEY
               valueFrom:
                 configMapKeyRef:
                   key: AWS_ACCESS_KEY
                   name: bow-api-config
             -
-              name: AWSSECRETKEY
+              name: AWS_SECRET_KEY
               valueFrom:
                 configMapKeyRef:
                   key: AWS_SECRET_KEY
                   name: bow-api-config
 
             -
-              name: AWSBUCKETNAME
+              name: AWS_BUCKET_NAME
               valueFrom:
                 configMapKeyRef:
                   key: AWS_BUCKET_NAME
                   name: bow-api-config
+            -
+              name: MONGO_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: MONGO_URL
+                  name: bow-api-config
 
-          image: "lalit1980/bow-product-svc:tagVersion"
+          image: "lalit1980/bow-product-svc:20"
           volumeMounts:
           - mountPath: "/data/files"
             name: mypd
@@ -94,7 +101,7 @@ spec:
 apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
-  name: test-selfsigned
+  name: bow-selfsigned
   namespace: default
 spec:
   selfSigned: {}
@@ -108,7 +115,7 @@ spec:
   commonName: boozeonwheels.com
   secretName: selfsigned-cert-tls
   issuerRef:
-    name: test-selfsigned
+    name: bow-selfsigned
 ---
 
 apiVersion: extensions/v1beta1
@@ -124,10 +131,10 @@ metadata:
 spec:
   tls:
   - hosts:
-    - api.bow.boozeonwheels.com
+    - boozeonwheels.com
     secretName: selfsigned-cert-tls
   rules:
-  - host: api.bow.boozeonwheels.com
+  - host: boozeonwheels.com
     http:
       paths:
       - path: /
