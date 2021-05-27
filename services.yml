@@ -130,7 +130,7 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: bow-ingress
+  name: bow-ingress-api-svc
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
@@ -142,6 +142,7 @@ spec:
   - host: boozeonwheels.com
     http:
       paths:
-      - backend:
+      - path: /swagger
+        backend:
           serviceName: bow-api-service
           servicePort: 9010
